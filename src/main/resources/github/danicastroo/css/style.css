@@ -1,0 +1,92 @@
+/* Estilo general */
+.root {
+    -fx-background-color: #062748; /* Color principal */
+    -fx-font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    -fx-font-size: 14px;
+}
+
+/* Estilo para los botones */
+.button {
+    -fx-background-color: #062748; /* Color de fondo */
+    -fx-text-fill: white; /* Color del texto */
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+    -fx-padding: 10px 20px;
+    -fx-font-weight: bold;
+    -fx-font-size: 16px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 8, 0.0, 0, 4);
+}
+
+.button:hover {
+    -fx-background-color: #4f6f90; /* Color ligeramente más claro al pasar el ratón */
+}
+
+/* Botón en gris clarito */
+.button-light {
+    -fx-background-color: #d3d3d3; /* Gris clarito */
+    -fx-text-fill: #062748; /* Texto en azul oscuro */
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+    -fx-padding: 10px 20px;
+    -fx-font-weight: bold;
+    -fx-font-size: 16px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 8, 0.0, 0, 4);
+}
+
+.button-light:hover {
+    -fx-background-color: #c0c0c0; /* Un poco más oscuro al pasar el ratón */
+}
+
+/* Estilo para etiquetas */
+.label {
+    -fx-text-fill: #d3d3d3; /* Gris clarito */
+    -fx-font-size: 16px;
+}
+
+/* Estilo para campos de texto */
+.text-field {
+    -fx-background-color: #d3d3d3; /* Gris clarito */
+    -fx-text-fill: #062748; /* Color de texto */
+    -fx-border-color: #062748;
+    -fx-border-radius: 5px;
+    -fx-padding: 5px 10px;
+}
+
+.text-field:focused {
+    -fx-border-color: #4f6f90; /* Color de borde cuando está enfocado */
+}
+
+/* Estilo para áreas de texto */
+.text-area {
+    -fx-background-color: #d3d3d3; /* Gris clarito */
+    -fx-text-fill: #062748; /* Color de texto */
+    -fx-border-color: #062748;
+    -fx-border-radius: 5px;
+    -fx-padding: 10px;
+}
+
+.text-area:focused {
+    -fx-border-color: #4f6f90; /* Color de borde cuando está enfocado */
+}
+
+/* Estilo para contenedores (como GridPane o VBox) */
+.grid-pane, .vbox, .hbox {
+    -fx-padding: 20px;
+    -fx-spacing: 15px;
+}
+
+/* Estilo para la barra de título */
+.label-title {
+    -fx-text-fill: white;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-alignment: center;
+    -fx-padding: 10px;
+}
+
+/* Estilo para los contenedores de imágenes */
+.image-view {
+    -fx-fit-width: 100%;
+    -fx-fit-height: 100%;
+    -fx-background-color: #062748;
+}
