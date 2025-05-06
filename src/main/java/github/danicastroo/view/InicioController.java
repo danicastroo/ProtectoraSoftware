@@ -34,4 +34,9 @@ public class InicioController extends Controller implements Initializable {
         App.currentController.changeScene(Scenes.INICIO_SESION, null);
     }
 
+    @FXML
+    public void cambiarRegistro() throws IOException {
+        App.currentController.changeScene(Scenes.REGISTRO, null);
+    }
+
 }

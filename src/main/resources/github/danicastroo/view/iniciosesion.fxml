@@ -11,9 +11,9 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="github.danicastroo.view.InicioSesionController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="github.danicastroo.view.InicioSesionController">
    <children>
-      <ImageView fitHeight="1083.0" fitWidth="1920.0" layoutX="-2.0" layoutY="-1.0" pickOnBounds="true">
+      <ImageView fitHeight="607.0" fitWidth="909.0" layoutX="-3.0" layoutY="-3.0" pickOnBounds="true">
          <image>
             <Image url="@../images/INICIOSESION.png" />
          </image>
@@ -21,9 +21,9 @@
             <Glow />
          </effect>
       </ImageView>
-      <TextField fx:id="CorreoField" layoutX="1206.0" layoutY="378.0" prefHeight="54.0" prefWidth="546.0" />
-      <PasswordField fx:id="ContrasenaField" layoutX="1200.0" layoutY="571.0" prefHeight="50.0" prefWidth="550.0" />
-      <Button fx:id="btnIniciarSesion" layoutX="1134.0" layoutY="792.0" mnemonicParsing="false" onAction="#cambiarInicio" prefHeight="78.0" prefWidth="272.0" stylesheets="@../css/style.css" text="Iniciar Sesión">
+      <TextField fx:id="CorreoField" layoutX="571.0" layoutY="206.0" prefHeight="39.0" prefWidth="254.0" />
+      <PasswordField fx:id="ContrasenaField" layoutX="571.0" layoutY="313.0" prefHeight="39.0" prefWidth="254.0" />
+      <Button fx:id="btnIniciarSesion" layoutX="534.0" layoutY="498.0" mnemonicParsing="false" onAction="#cambiarInicio" prefHeight="53.0" prefWidth="163.0" stylesheets="@../css/style.css" text="Iniciar Sesión">
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor>
@@ -31,33 +31,33 @@
             <Font size="29.0" />
          </font>
       </Button>
-      <Text fill="#1e2f61" layoutX="1139.0" layoutY="145.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Bienvenido de nuevo" wrappingWidth="505.66943359375">
+      <Text fill="#1e2f61" layoutX="520.0" layoutY="84.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Bienvenido de nuevo" wrappingWidth="379.26934814453125">
          <font>
-            <Font name="Arial Rounded MT Bold" size="46.0" />
+            <Font name="Arial Rounded MT Bold" size="35.0" />
          </font>
       </Text>
-      <Text fill="#1e2f61" layoutX="1144.0" layoutY="190.0" strokeType="OUTSIDE" strokeWidth="0.0" text="¿No dispones de cuenta?" wrappingWidth="505.66943359375">
+      <Text fill="#1e2f61" layoutX="520.0" layoutY="120.0" strokeType="OUTSIDE" strokeWidth="0.0" text="¿No dispones de cuenta?" wrappingWidth="196.869384765625">
          <font>
-            <Font name="Arial" size="26.0" />
+            <Font name="Arial" size="16.0" />
          </font>
       </Text>
-      <Text fx:id="btnRegistrarse" fill="#1e2f61" layoutX="1470.0" layoutY="190.0" onDragDetected="#cambiarInicio" strokeType="OUTSIDE" strokeWidth="0.0" text="Registrate" underline="true" wrappingWidth="188.3998046874999">
+      <Text fx:id="btnRegistrarse" fill="#1e2f61" layoutX="724.0" layoutY="119.0" onMouseClicked="#cambiarRegistro" strokeType="OUTSIDE" strokeWidth="0.0" text="Registrate" underline="true" wrappingWidth="85.99965820312491">
          <font>
-            <Font name="Arial Rounded MT Bold" size="26.0" />
-         </font>
-         <cursor>
-            <Cursor fx:constant="HAND" />
-         </cursor>
-      </Text>
-      <Text fx:id="btnAtras" fill="#1e2f61" layoutX="1606.0" layoutY="863.0" onDragDetected="#cambiarInicio" strokeType="OUTSIDE" strokeWidth="0.0" text="Atrás" underline="true" wrappingWidth="188.3998046874999">
-         <font>
-            <Font name="Arial Rounded MT Bold" size="26.0" />
+            <Font name="Arial Rounded MT Bold" size="16.0" />
          </font>
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor>
       </Text>
-      <ImageView fitHeight="251.0" fitWidth="345.0" layoutX="412.0" layoutY="415.0" pickOnBounds="true" preserveRatio="true">
+      <Text fx:id="btnAtras" fill="#1e2f61" layoutX="770.0" layoutY="530.0" onMouseClicked="#cambiarInicio" strokeType="OUTSIDE" strokeWidth="0.0" text="Atrás" underline="true" wrappingWidth="85.99965820312491">
+         <font>
+            <Font name="Arial Rounded MT Bold" size="16.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Text>
+      <ImageView fitHeight="136.0" fitWidth="136.0" layoutX="187.0" layoutY="217.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../images/logo.png" />
          </image>

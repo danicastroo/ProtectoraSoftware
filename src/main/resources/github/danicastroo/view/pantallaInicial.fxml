@@ -6,24 +6,24 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="github.danicastroo.view.InicioController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="github.danicastroo.view.InicioController">
    <children>
-      <ImageView fitHeight="1088.0" fitWidth="1950.0" layoutX="-26.0" layoutY="-2.0" pickOnBounds="true">
+      <ImageView fitHeight="610.0" fitWidth="934.0" layoutX="-26.0" layoutY="-2.0" pickOnBounds="true">
          <image>
             <Image url="@../images/fondoAzul.png" />
          </image>
       </ImageView>
-      <ImageView fitHeight="304.0" fitWidth="648.0" layoutX="856.0" layoutY="154.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="147.0" fitWidth="139.0" layoutX="383.0" layoutY="89.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../images/logo.png" />
          </image>
       </ImageView>
-      <Button fx:id="btnIniciarSesion" layoutX="870.0" layoutY="511.0" mnemonicParsing="false" onAction="#cambiarInicioSesion" prefHeight="64.0" prefWidth="278.0" styleClass="button-light" stylesheets="@../css/style.css" text="Iniciar Sesión">
+      <Button fx:id="btnIniciarSesion" layoutX="309.0" layoutY="293.0" mnemonicParsing="false" onAction="#cambiarInicioSesion" prefHeight="64.0" prefWidth="278.0" styleClass="button-light" stylesheets="@../css/style.css" text="Iniciar Sesión">
          <font>
             <Font size="23.0" />
          </font>
       </Button>
-      <Button fx:id="btnRegistrar" layoutX="869.0" layoutY="633.0" mnemonicParsing="false" prefHeight="64.0" prefWidth="278.0" styleClass="button-light" stylesheets="@../css/style.css" text="Registrar">
+      <Button fx:id="btnRegistrar" layoutX="308.0" layoutY="415.0" mnemonicParsing="false" onAction="#cambiarRegistro" prefHeight="64.0" prefWidth="278.0" styleClass="button-light" stylesheets="@../css/style.css" text="Registrar">
          <font>
             <Font size="23.0" />
          </font>

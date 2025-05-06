@@ -43,4 +43,9 @@ public class InicioSesionController extends Controller implements Initializable 
     public void cambiarInicio() throws IOException {
         App.currentController.changeScene(Scenes.WELCOME, null);
     }
+
+    @FXML
+    public void cambiarRegistro() throws IOException {
+        App.currentController.changeScene(Scenes.REGISTRO, null);
+    }
 }

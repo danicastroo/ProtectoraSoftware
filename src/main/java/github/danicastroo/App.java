@@ -22,12 +22,18 @@ public class App extends Application {
     public void start(Stage stage) throws IOException {
         View view = AppController.loadFXML(Scenes.ROOT);
 
-        scene = new Scene(view.scene,1920,1080);
+        scene = new Scene(view.scene, 900, 600);
+        stage.centerOnScreen(); // Centra la ventana en la pantalla
+        stage.setResizable(true); // Permite redimensionar la ventana
+
         currentController=(AppController) view.controller;
         currentController.onOpen(null);
         stage.setScene(scene);
-        stage.setTitle("Protectora"); // Opcional, tu título
-        stage.setResizable(false);    // Opcional, bloquea el cambio de tamaño
+        stage.setTitle("CasTrack - Software de gestión de protectoras");
+        //Icono del programa
+        stage.getIcons().add(new javafx.scene.image.Image(getClass().getResourceAsStream("/github/danicastroo/images/logo.png")));
+
+
         stage.show();
     }
 
