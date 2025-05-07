@@ -19,6 +19,9 @@ public class Trabajador extends Persona {
         this.password = password;
     }
 
+    public Trabajador(String nombre, String gmail, String password) {
+    }
+
     // Getters y setters específicos
     public int getIdTrabajador() { return idTrabajador; }
     public void setIdTrabajador(int idTrabajador) { this.idTrabajador = idTrabajador; }
