@@ -62,24 +62,24 @@ public class RegistrarController extends Controller implements Initializable {
 
         // Obtener textos de los campos
         String nombre = NombreField.getText() != null ? NombreField.getText().trim() : "";
-        String gmail = CorreoField.getText() != null ? CorreoField.getText().trim() : "";
+        String email = CorreoField.getText() != null ? CorreoField.getText().trim() : "";
         String password = ContrasenaField.getText() != null ? ContrasenaField.getText().trim() : "";
 
         // Validar el campo "Nombre"
         if (nombre.isEmpty()) {
-            Utils.Alert("Error", "Campo Nombre Vacío", "El nombre es obligatorio. Por favor, complételo.", Alert.AlertType.ERROR);
+            Utils.Alert("Error", "El campo de nombre está vacío", "El nombre es obligatorio. Por favor, complételo.", Alert.AlertType.ERROR);
             return; // Detener el proceso
         }
 
         // Validar el campo "Correo"
-        if (gmail.isEmpty()) {
-            Utils.Alert("Error", "Campo Correo Vacío", "El correo es obligatorio. Por favor, complételo.", Alert.AlertType.ERROR);
+        if (email.isEmpty()) {
+            Utils.Alert("Error", "El campo correo está vacío", "El correo es obligatorio. Por favor, complételo.", Alert.AlertType.ERROR);
             return; // Detener el proceso
         }
 
         // Validar el campo "Contraseña"
         if (password.isEmpty()) {
-            Utils.Alert("Error", "Campo Contraseña Vacío", "La contraseña es obligatoria. Por favor, complétela.", Alert.AlertType.ERROR);
+            Utils.Alert("Error", "El campo contraseña está vacío", "La contraseña es obligatoria. Por favor, complétela.", Alert.AlertType.ERROR);
             return; // Detener el proceso
         }
 
@@ -90,11 +90,24 @@ public class RegistrarController extends Controller implements Initializable {
                 return; // Evitar continuar con el registro
             }
 
+            if (userDAO.isEmailRegistered(email)) {
+                Utils.Alert("Error", "Correo ya registrado", "El correo electrónico ya está en uso. Por favor, usa otro.", Alert.AlertType.ERROR);
+                return;
+            }
+
+            if (userDAO.isNameRegistered(nombre)) {
+                Utils.Alert("Error", "Nombre ya registrado", "El nombre '" + nombre + "' ya está en uso. Por favor elige otro.", Alert.AlertType.ERROR);
+                return;
+            }
+
+
+
+
             // Encriptar la contraseña antes de guardarla
             password = Utils.encryptSHA256(password);
 
             // Crear y guardar el objeto Trabajador
-            Trabajador trabajador = new Trabajador(nombre, 0, null, null, gmail, password);
+            Trabajador trabajador = new Trabajador(nombre, 0, null, null, email, password);
             userDAO.save(trabajador);
 
             // Notificar registro exitoso

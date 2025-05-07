@@ -5,10 +5,7 @@ import github.danicastroo.model.entity.Trabajador;
 import github.danicastroo.model.interfaces.InterfaceTrabajadorDAO;
 
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.List;
 
 public class TrabajadorDAO implements InterfaceTrabajadorDAO<Trabajador> {
@@ -33,6 +30,22 @@ public class TrabajadorDAO implements InterfaceTrabajadorDAO<Trabajador> {
             System.err.println("Error al inicializar la conexión en TrabajadorDAO:");
             e.printStackTrace();
         }
+    }
+
+    public boolean isEmailRegistered(String email) throws SQLException {
+        String query = "SELECT COUNT(*) FROM persona WHERE email = ?";
+
+        try (Connection conn = ConnectionDB.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setString(1, email);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt(1) > 0; // Si el conteo es mayor a 0, el correo ya existe
+            }
+        }
+        return false;
     }
 
 
@@ -110,12 +123,14 @@ public class TrabajadorDAO implements InterfaceTrabajadorDAO<Trabajador> {
                 } else {
                     throw new SQLException("No se pudo generar el ID para la tabla 'persona'.");
                 }
+            } catch (SQLIntegrityConstraintViolationException e) {
+                conn.rollback(); // Revertir la transacción en caso de error
+                throw new SQLException("El nombre ya está ocupado o el correo ya está en uso.", e);
             } catch (SQLException e) {
                 conn.rollback(); // Revertir la transacción en caso de error
                 throw e;
             }
         }
-
         return trabajador;
     }
 
@@ -139,16 +154,20 @@ public class TrabajadorDAO implements InterfaceTrabajadorDAO<Trabajador> {
 
     }
 
-    public int generateId() throws SQLException {
-        String sql = "SELECT MAX(idPersona) FROM persona"; // Buscamos el último ID en persona
+
+    public boolean isNameRegistered(String nombre) throws SQLException {
+        String query = "SELECT COUNT(*) FROM persona WHERE nombre = ?";
+
         try (Connection conn = ConnectionDB.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setString(1, nombre); // Reemplaza el parámetro de la consulta con el nombre
+            ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
-                return rs.getInt(1) + 1; // Si hay IDs, devuelve el siguiente disponible.
+                return rs.getInt(1) > 0; // Si COUNT(*) > 0, el nombre ya existe
             }
         }
-        return 1; // Si la tabla está vacía, empieza en 1.
+        return false; // Si no hay filas con ese nombre, el nombre no está registrado
     }
 }
