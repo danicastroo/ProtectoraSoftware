@@ -78,17 +78,40 @@ public class TrabajadorDAO implements InterfaceTrabajadorDAO<Trabajador> {
 
 
     @Override
-    public String checkLogin(String email, String password) throws SQLException {
-        try (PreparedStatement pst = ConnectionDB.getConnection().prepareStatement(QUERY)) {
-            pst.setString(1, email);
-            pst.setString(2, password);
-            ResultSet res = pst.executeQuery();
-            if (res.next()) {
-                return res.getString("nombre");
+    public Trabajador checkLogin(String email, String password) throws SQLException {
+        // Consulta SQL utilizando solo las columnas existentes
+        String query = "SELECT idTrabajador, estado, ubicacion, email FROM trabajador " +
+                "WHERE email = ? AND password = ?";
+
+        try (Connection conn = ConnectionDB.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            // Asignar los parámetros a la consulta
+            stmt.setString(1, email);
+            stmt.setString(2, password);
+
+            // Ejecutar la consulta
+            ResultSet resultSet = stmt.executeQuery();
+
+            // Procesar el resultado
+            if (resultSet.next()) {
+                Trabajador trabajador = new Trabajador();
+                trabajador.setIdTrabajador(resultSet.getInt("idTrabajador"));
+                trabajador.setEstado(resultSet.getString("estado"));
+                trabajador.setUbicacion(resultSet.getString("ubicacion"));
+                trabajador.setEmail(resultSet.getString("email"));
+
+                // Retornar el objeto trabajador si las credenciales son válidas
+                return trabajador;
             }
         }
+
+        // Retornar null si no se encuentra un usuario con las credenciales
         return null;
     }
+
+
+
 
     @Override
     public Trabajador save(Trabajador trabajador) throws SQLException {

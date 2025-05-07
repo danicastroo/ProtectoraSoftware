@@ -6,5 +6,5 @@ import java.sql.SQLException;
 
 public interface InterfaceTrabajadorDAO<T> extends DAO<T>{
     Trabajador findByUsername(String username) throws SQLException;
-    String checkLogin(String username, String password) throws SQLException;
+    T checkLogin(String username, String password) throws SQLException;
 }

@@ -2,6 +2,7 @@ package github.danicastroo.view;
 
 import github.danicastroo.App;
 import github.danicastroo.model.dao.TrabajadorDAO;
+import github.danicastroo.model.entity.Trabajador;
 import github.danicastroo.model.singleton.UserSession;
 import github.danicastroo.utils.Utils;
 import javafx.fxml.FXML;
@@ -33,6 +34,7 @@ public class InicioSesionController extends Controller implements Initializable 
         this.trabajadorDAO = new TrabajadorDAO();
     }
 
+
     @Override
     public void onOpen(Object input) throws IOException {
 
@@ -49,7 +51,7 @@ public class InicioSesionController extends Controller implements Initializable 
 
     @FXML
     private void cambiarUsuario() throws IOException {
-        App.currentController.changeScene(Scenes.WELCOME, null);
+        App.currentController.changeScene(Scenes.MAIN, null);
     }
 
     @FXML
@@ -64,27 +66,39 @@ public class InicioSesionController extends Controller implements Initializable 
 
     @FXML
     private void login() throws SQLException, IOException {
-
+        // Obtener datos ingresados por el usuario
         String email = CorreoField.getText().trim();
         String password = ContrasenaField.getText().trim();
-        password = Utils.encryptSHA256(password);
 
-
-        if(email.equals("") || password.equals("")) {
-            Utils.ShowAlert("Falta algun campo por introducir");
-        }else {
-            TrabajadorDAO mDAO = new TrabajadorDAO();
-            String nameUser;
-            if((nameUser=mDAO.checkLogin(email, password))!=null) {
-                UserSession.login(email, password);
-                Utils.ShowAlert("Login exitoso, Se ha logeago el Usuario correctamente.");
-                cambiarUsuario();
-            }else {
-                UserSession.logout();
-                Utils.ShowAlert("No se ha podido logear, Intentelo de nuevo.");
-            }
-
+        // Validar que los campos no estén vacíos
+        if (email.isEmpty() || password.isEmpty()) {
+            Utils.ShowAlert("Falta algún campo por introducir.");
+            return;
         }
 
+        // Encriptar la contraseña ingresada para compararla con la base de datos
+        String hashedPassword = Utils.encryptSHA256(password);
+
+        try {
+            // Verificar las credenciales utilizando el DAO
+            Trabajador trabajador = trabajadorDAO.checkLogin(email, hashedPassword);
+
+            if (trabajador != null) {
+                // Inicio de sesión exitoso, guardar datos en la sesión y mostrar mensaje
+                UserSession.login(email, hashedPassword);
+                Utils.ShowAlert("Inicio de sesión exitoso. Bienvenido, " + trabajador.getNombre());
+                cambiarUsuario(); // Cambiar a la escena correspondiente al inicio exitoso
+            } else {
+                // Credenciales inválidas, se interrumpe inicio de sesión
+                UserSession.logout();
+                Utils.ShowAlert("Correo o contraseña incorrectos. Inténtelo de nuevo.");
+            }
+        } catch (SQLException e) {
+            // Manejo de errores en la base de datos
+            Utils.ShowAlert("Error al intentar iniciar sesión. Por favor, inténtelo más tarde.");
+            e.printStackTrace();
+        }
     }
+
+
 }

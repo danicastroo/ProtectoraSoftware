@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.Text?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="github.danicastroo.view.PantallaPrincipalController"
+            stylesheets="@../css/pantallas.css">
+
+    <!-- Encabezado -->
+    <top>
+        <HBox styleClass="header-bar" alignment="CENTER_LEFT" spacing="10">
+            <padding>
+                <Insets top="10" right="20" bottom="10" left="20"/>
+            </padding>
+            <Text styleClass="header-title" text="CasTrack"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Text fx:id="userText" styleClass="header-user" text="Usuario: Admin"/>
+        </HBox>
+    </top>
+
+    <!-- Panel lateral izquierdo -->
+    <left>
+        <VBox styleClass="sidebar" spacing="5">
+            <padding>
+                <Insets top="20" right="15" bottom="20" left="15"/>
+            </padding>
+
+            <!-- Sección Principal -->
+            <Label text="Principal" styleClass="sidebar-section"/>
+            <Button text="Inicio" styleClass="sidebar-button"/>
+            <Button text="Animales" styleClass="sidebar-button"/>
+            <Button text="Personal" styleClass="sidebar-button"/>
+
+            <!-- Sección Gestión -->
+            <Label text="Gestión" styleClass="sidebar-section">
+                <padding>
+                    <Insets top="15" bottom="5"/>
+                </padding>
+            </Label>
+            <Button text="Turnos"  styleClass="sidebar-button"/>
+            <Button text="Donaciones"  styleClass="sidebar-button"/>
+            <Button text="Inventario"  styleClass="sidebar-button"/>
+
+            <!-- Sección Otros -->
+            <Label text="Otros" styleClass="sidebar-section">
+                <padding>
+                    <Insets top="15" bottom="5"/>
+                </padding>
+            </Label>
+            <Button text="Recordatorios"  styleClass="sidebar-button"/>
+
+            <Region VBox.vgrow="ALWAYS"/>
+
+            <!-- Botón de Ayuda -->
+            <Button text="Ayuda"  styleClass="sidebar-button"/>
+
+            <!-- Botón Cerrar Sesión al final -->
+            <Button text="Cerrar Sesión" styleClass="sidebar-button-danger"/>
+        </VBox>
+    </left>
+
+    <!-- Contenido principal -->
+    <center>
+        <StackPane fx:id="contentArea">
+            <!-- El contenido se cargará dinámicamente aquí -->
+            <VBox alignment="CENTER" spacing="20">
+                <Text styleClass="title-text" text="Bienvenido a CasTrack"/>
+                <Text styleClass="subtitle-text" text="Selecciona una opción del menú para comenzar"/>
+            </VBox>
+        </StackPane>
+    </center>
+
+    <!-- Barra de estado -->
+    <bottom>
+        <HBox spacing="10" styleClass="status-bar">
+            <padding>
+                <Insets top="5" right="15" bottom="5" left="15"/>
+            </padding>
+            <Text fx:id="statusText" text="Listo"/>
+        </HBox>
+    </bottom>
+
+</BorderPane>

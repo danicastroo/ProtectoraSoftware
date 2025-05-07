@@ -4,6 +4,7 @@ module github.danicastroo {
     requires java.xml.bind;  // Módulo para JAXB
     requires java.desktop;
     requires java.sql;
+    requires java.management;
 
     // Apertura para JavaFX
     opens github.danicastroo to javafx.fxml;
