@@ -8,11 +8,14 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import static github.danicastroo.App.scene;
+import static github.danicastroo.App.stage;
 
 
 public class AppController extends Controller implements Initializable {
@@ -41,6 +44,18 @@ public class AppController extends Controller implements Initializable {
         View view = loadFXML(scene);
         borderPane.setCenter(view.scene);
         this.centerController= view.controller;
+        this.centerController.onOpen(data);
+    }
+
+    public void changeSceneFullScreen(Scenes sceneEnum, Object data, boolean fullScreen) throws IOException {
+        View view = loadFXML(sceneEnum);
+        Scene newScene = new Scene(view.scene); // Creamos una nueva escena con el contenido cargado
+        Stage currentStage = (Stage) borderPane.getScene().getWindow(); // Obtenemos el Stage actual
+
+        currentStage.setScene(newScene); // Establecemos la nueva escena
+        currentStage.setFullScreen(fullScreen); // Activamos o desactivamos pantalla completa
+
+        this.centerController = view.controller;
         this.centerController.onOpen(data);
     }
 

@@ -79,37 +79,44 @@ public class TrabajadorDAO implements InterfaceTrabajadorDAO<Trabajador> {
 
     @Override
     public Trabajador checkLogin(String email, String password) throws SQLException {
-        // Consulta SQL utilizando solo las columnas existentes
-        String query = "SELECT idTrabajador, estado, ubicacion, email FROM trabajador " +
-                "WHERE email = ? AND password = ?";
+        // Consulta SQL para validar credenciales y obtener datos adicionales (incluyendo el nombre)
+        String query = "SELECT t.idTrabajador, t.estado, t.ubicacion, t.email, p.nombre " +
+                "FROM trabajador t " +
+                "INNER JOIN persona p ON t.idTrabajador = p.idPersona " +
+                "WHERE t.email = ? AND t.password = ?";
 
+        // Inicializamos el objeto Trabajador en null
+        Trabajador trabajador = null;
+
+        // Conexión a la base de datos
         try (Connection conn = ConnectionDB.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
 
-            // Asignar los parámetros a la consulta
+            // Asignar los parámetros de la consulta
             stmt.setString(1, email);
             stmt.setString(2, password);
 
-            // Ejecutar la consulta
+            // Ejecutar la consulta y procesar el resultado
             ResultSet resultSet = stmt.executeQuery();
+            boolean encontrado = resultSet.next(); // Verificar si hay un resultado
 
-            // Procesar el resultado
-            if (resultSet.next()) {
-                Trabajador trabajador = new Trabajador();
+            if (encontrado) {
+                // Si se encuentra un resultado, creamos el objeto Trabajador
+                trabajador = new Trabajador();
                 trabajador.setIdTrabajador(resultSet.getInt("idTrabajador"));
                 trabajador.setEstado(resultSet.getString("estado"));
                 trabajador.setUbicacion(resultSet.getString("ubicacion"));
                 trabajador.setEmail(resultSet.getString("email"));
-
-                // Retornar el objeto trabajador si las credenciales son válidas
-                return trabajador;
+                trabajador.setNombre(resultSet.getString("nombre")); // Establecer el nombre desde la tabla Persona
             }
+
+            // Cerramos el ResultSet manualmente
+            resultSet.close();
         }
 
-        // Retornar null si no se encuentra un usuario con las credenciales
-        return null;
+        // Retornamos el objeto Trabajador (puede ser null si no se encontró nada)
+        return trabajador;
     }
-
 
 
 

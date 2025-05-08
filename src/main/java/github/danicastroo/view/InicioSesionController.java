@@ -47,11 +47,21 @@ public class InicioSesionController extends Controller implements Initializable 
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        // Detectar la tecla Enter en el campo de contraseña
+        ContrasenaField.setOnKeyPressed(event -> {
+            switch (event.getCode()) {
+                case ENTER:
+                    btnIniciarSesion.fire(); // Simula un clic en el botón
+                    break;
+                default:
+                    break;
+            }
+        });
     }
 
     @FXML
     private void cambiarUsuario() throws IOException {
-        App.currentController.changeScene(Scenes.MAIN, null);
+        App.currentController.changeSceneFullScreen(Scenes.MAIN, null, true);
     }
 
     @FXML

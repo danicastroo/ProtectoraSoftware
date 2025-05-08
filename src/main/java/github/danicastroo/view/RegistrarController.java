@@ -30,6 +30,7 @@ public class RegistrarController extends Controller implements Initializable {
     @FXML
     private TextField NombreField;
 
+
     @Override
     public void onOpen(Object input) throws IOException {
 

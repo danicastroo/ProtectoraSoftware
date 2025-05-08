@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="github.danicastroo.view.ModuloAnimalesController">
+   <children>
+      <Label layoutX="50.0" layoutY="30.0" text="Nombre:" />
+      <TextField fx:id="nombreField" layoutX="150.0" layoutY="30.0" />
+
+      <Label layoutX="50.0" layoutY="70.0" text="Edad:" />
+      <TextField fx:id="edadField" layoutX="150.0" layoutY="70.0" />
+
+      <Label layoutX="50.0" layoutY="110.0" text="Tipo:" />
+      <ComboBox fx:id="tipoComboBox" layoutX="150.0" layoutY="110.0" />
+
+      <Label layoutX="50.0" layoutY="150.0" text="Estado:" />
+      <ComboBox fx:id="estadoComboBox" layoutX="150.0" layoutY="150.0" />
+
+      <Label layoutX="50.0" layoutY="190.0" text="Fecha de Adopción:" />
+      <DatePicker fx:id="fechaAdopcionPicker" layoutX="150.0" layoutY="190.0" />
+
+      <Label layoutX="50.0" layoutY="230.0" text="Microchip:" />
+      <TextField fx:id="microchipField" layoutX="150.0" layoutY="230.0" />
+
+      <Label layoutX="50.0" layoutY="270.0" text="Observaciones:" />
+      <TextField fx:id="observacionesField" layoutX="150.0" layoutY="270.0" />
+
+      <Label layoutX="50.0" layoutY="310.0" text="Tipo de Cuidado:" />
+      <TextField fx:id="tipoCuidadoField" layoutX="150.0" layoutY="310.0" />
+
+      <Button fx:id="guardarAnimalButton" layoutX="150.0" layoutY="350.0" text="Guardar Animal" />
+   </children>
+</AnchorPane>

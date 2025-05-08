@@ -1,14 +1,20 @@
-/* Estilo general */
+/*====================================
+  2. ESTILO GLOBAL
+=====================================*/
 .root {
-    -fx-background-color: #062748; /* Color principal */
+    /* Fondo principal y tipografía base */
+    -fx-background-color: #062748;
     -fx-font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     -fx-font-size: 14px;
 }
 
-/* Estilo para los botones */
+/*====================================
+  3. BOTONES
+=====================================*/
+/* Botón genérico */
 .button {
-    -fx-background-color: #062748; /* Color de fondo */
-    -fx-text-fill: white; /* Color del texto */
+    -fx-background-color: #062748;
+    -fx-text-fill: white;
     -fx-border-radius: 5px;
     -fx-background-radius: 5px;
     -fx-padding: 10px 20px;
@@ -16,15 +22,14 @@
     -fx-font-size: 16px;
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 8, 0.0, 0, 4);
 }
-
 .button:hover {
-    -fx-background-color: #4f6f90; /* Color ligeramente más claro al pasar el ratón */
+    -fx-background-color: #4f6f90;
 }
 
-/* Botón en gris clarito */
+/* Botón claro */
 .button-light {
-    -fx-background-color: #d3d3d3; /* Gris clarito */
-    -fx-text-fill: #062748; /* Texto en azul oscuro */
+    -fx-background-color: #d3d3d3;
+    -fx-text-fill: #062748;
     -fx-border-radius: 5px;
     -fx-background-radius: 5px;
     -fx-padding: 10px 20px;
@@ -32,59 +37,161 @@
     -fx-font-size: 16px;
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 8, 0.0, 0, 4);
 }
-
 .button-light:hover {
-    -fx-background-color: #c0c0c0; /* Un poco más oscuro al pasar el ratón */
+    -fx-background-color: #c0c0c0;
 }
 
-/* Estilo para etiquetas */
+/* Botón moderno minimalista */
+.button-modern {
+    -fx-background-color: transparent;
+    -fx-text-fill: #ffffff;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-padding: 12px 30px;
+    -fx-font-weight: 500;
+    -fx-font-size: 14px;
+    -fx-font-family: 'Segoe UI', 'Open Sans', sans-serif;
+    -fx-cursor: hand;
+    -fx-border-color: rgba(255, 255, 255, 0.3);
+    -fx-border-width: 1.5px;
+    -fx-background-insets: 0;
+    -fx-effect: innershadow(three-pass-box, rgba(255,255,255,0.1), 5, 0.3, 0, 1);
+    -fx-transition:
+            -fx-background-color 0.3s ease,
+            -fx-border-color 0.3s ease,
+            -fx-effect 0.3s ease;
+}
+.button-modern:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.08);
+    -fx-border-color: rgba(255, 255, 255, 0.5);
+    -fx-effect: innershadow(three-pass-box, rgba(255,255,255,0.2), 8, 0.5, 0, 1);
+}
+.button-modern:pressed {
+    -fx-background-color: rgba(255, 255, 255, 0.15);
+    -fx-translate-y: 1px;
+    -fx-effect: innershadow(three-pass-box, rgba(255,255,255,0.1), 3, 0.2, 0, 0);
+}
+.button-modern:focused {
+    -fx-border-color: rgba(255, 255, 255, 0.8);
+    -fx-effect: dropshadow(three-pass-box, rgba(255,255,255,0.3), 0, 0, 0, 1);
+}
+
+/* Botón de Cerrar Sesión – Toque Rojo */
+.button-logout {
+    -fx-background-color: transparent;
+    -fx-text-fill: #ff4d4d;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-padding: 12px 30px;
+    -fx-font-weight: 500;
+    -fx-font-size: 14px;
+    -fx-font-family: 'Segoe UI', 'Open Sans', sans-serif;
+    -fx-cursor: hand;
+    -fx-border-color: rgba(255, 77, 77, 0.7);
+    -fx-border-width: 1.5px;
+    -fx-background-insets: 0;
+    -fx-effect: innershadow(three-pass-box, rgba(255,77,77,0.1), 5, 0.3, 0, 1);
+    -fx-transition:
+            -fx-background-color 0.3s ease,
+            -fx-border-color 0.3s ease,
+            -fx-effect 0.3s ease;
+}
+.button-logout:hover {
+    -fx-background-color: rgba(255, 77, 77, 0.08);
+    -fx-border-color: rgba(255, 77, 77, 0.9);
+    -fx-effect: innershadow(three-pass-box, rgba(255,77,77,0.2), 8, 0.5, 0, 1);
+}
+.button-logout:pressed {
+    -fx-background-color: rgba(255, 77, 77, 0.15);
+    -fx-translate-y: 1px;
+    -fx-effect: innershadow(three-pass-box, rgba(255,77,77,0.1), 3, 0.2, 0, 0);
+}
+.button-logout:focused {
+    -fx-border-color: rgba(255, 77, 77, 1);
+    -fx-effect: dropshadow(three-pass-box, rgba(255,77,77,0.3), 0, 0, 0, 1);
+}
+
+/*====================================
+  4. TIPOGRAFÍA Y ETIQUETAS
+=====================================*/
+/* Etiqueta genérica */
 .label {
-    -fx-text-fill: #d3d3d3; /* Gris clarito */
+    -fx-text-fill: #d3d3d3;
     -fx-font-size: 16px;
 }
 
-/* Estilo para campos de texto */
+/* Barra de título */
+.label-title {
+    -fx-text-fill: #062748;
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+    -fx-alignment: center;
+    -fx-padding: 20px;
+    -fx-background-color: #d3d3d3;
+    -fx-border-color: #4f6f90;
+    -fx-border-width: 2px;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.15), 8, 0.5, 0, 2);
+}
+
+/*====================================
+  5. CAMPOS DE TEXTO Y ÁREAS DE TEXTO
+=====================================*/
+/* TextField básico */
 .text-field {
-    -fx-background-color: #d3d3d3; /* Gris clarito */
-    -fx-text-fill: #062748; /* Color de texto */
+    -fx-background-color: #d3d3d3;
+    -fx-text-fill: #062748;
     -fx-border-color: #062748;
     -fx-border-radius: 5px;
     -fx-padding: 5px 10px;
 }
-
 .text-field:focused {
-    -fx-border-color: #4f6f90; /* Color de borde cuando está enfocado */
+    -fx-border-color: #4f6f90;
 }
 
-/* Estilo para áreas de texto */
+/* TextArea con efecto glass */
 .text-area {
-    -fx-background-color: #d3d3d3; /* Gris clarito */
-    -fx-text-fill: #062748; /* Color de texto */
-    -fx-border-color: #062748;
-    -fx-border-radius: 5px;
-    -fx-padding: 10px;
+    -fx-background-color: rgba(255, 255, 255, 0.15);
+    -fx-background-insets: 0;
+    -fx-background-radius: 14px;
+    -fx-padding: 16px;
+    -fx-font-size: 15px;
+    -fx-font-family: 'Segoe UI Variable', sans-serif;
+    -fx-text-fill: #062748;
+    -fx-effect:
+            dropshadow(three-pass-box, rgba(0,0,0,0.10), 10, 0, 0, 4),
+            innershadow(three-pass-box, rgba(255,255,255,0.7), 6, 0, 0, 2);
+    -fx-transition:
+            -fx-background-color 0.3s ease,
+            -fx-effect 0.3s ease,
+            -fx-padding 0.3s ease;
 }
-
+.text-area:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.20);
+}
 .text-area:focused {
-    -fx-border-color: #4f6f90; /* Color de borde cuando está enfocado */
+    -fx-background-color: rgba(255, 255, 255, 0.25);
+    -fx-border-color: #4f6f90;
+    -fx-border-width: 1.5px;
+    -fx-effect:
+            dropshadow(three-pass-box, rgba(0,0,0,0.15), 12, 0, 0, 6),
+            innershadow(three-pass-box, rgba(255,255,255,0.85), 8, 0, 0, 3);
 }
 
-/* Estilo para contenedores (como GridPane o VBox) */
-.grid-pane, .vbox, .hbox {
+/*====================================
+  6. LAYOUTS Y CONTENEDORES
+=====================================*/
+.grid-pane,
+.vbox,
+.hbox {
     -fx-padding: 20px;
     -fx-spacing: 15px;
 }
 
-/* Estilo para la barra de título */
-.label-title {
-    -fx-text-fill: white;
-    -fx-font-size: 20px;
-    -fx-font-weight: bold;
-    -fx-alignment: center;
-    -fx-padding: 10px;
-}
-
-/* Estilo para los contenedores de imágenes */
+/*====================================
+  7. IMAGES
+=====================================*/
 .image-view {
     -fx-fit-width: 100%;
     -fx-fit-height: 100%;

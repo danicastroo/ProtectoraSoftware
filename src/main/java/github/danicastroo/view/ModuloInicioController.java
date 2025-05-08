@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class PantallaPrincipalController extends Controller implements Initializable {
+public class ModuloInicioController extends Controller implements Initializable {
     @Override
     public void onOpen(Object input) throws IOException {
 

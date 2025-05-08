@@ -1,8 +1,9 @@
 package github.danicastroo.model.entity;
 
 public class Cuida {
-    private int idAnimal; //FK
-    private int idTrabajador; //FK
+    private int idCuida; // Nuevo atributo para la clave primaria
+    private int idAnimal; // FK
+    private int idTrabajador; // FK
     private String observaciones;
     private String tipo;
 
@@ -18,27 +19,26 @@ public class Cuida {
     }
 
     // Getters y setters
+    public int getIdCuida() { return idCuida; }
+    public void setIdCuida(int idCuida) { this.idCuida = idCuida; }
 
     public int getIdAnimal() { return idAnimal; }
-
     public void setIdAnimal(int idAnimal) { this.idAnimal = idAnimal; }
 
     public int getIdTrabajador() { return idTrabajador; }
-
     public void setIdTrabajador(int idTrabajador) { this.idTrabajador = idTrabajador; }
 
     public String getObservaciones() { return observaciones; }
-
     public void setObservaciones(String observaciones) { this.observaciones = observaciones; }
 
     public String getTipo() { return tipo; }
-
     public void setTipo(String tipo) { this.tipo = tipo; }
 
     @Override
     public String toString() {
         return "Cuida{" +
-                "idAnimal=" + idAnimal +
+                "idCuida=" + idCuida +
+                ", idAnimal=" + idAnimal +
                 ", idTrabajador=" + idTrabajador +
                 ", observaciones='" + observaciones + '\'' +
                 ", tipo='" + tipo + '\'' +
