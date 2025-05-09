@@ -76,35 +76,28 @@ public class InicioSesionController extends Controller implements Initializable 
 
     @FXML
     private void login() throws SQLException, IOException {
-        // Obtener datos ingresados por el usuario
         String email = CorreoField.getText().trim();
         String password = ContrasenaField.getText().trim();
 
-        // Validar que los campos no estén vacíos
         if (email.isEmpty() || password.isEmpty()) {
             Utils.ShowAlert("Falta algún campo por introducir.");
             return;
         }
 
-        // Encriptar la contraseña ingresada para compararla con la base de datos
         String hashedPassword = Utils.encryptSHA256(password);
 
         try {
-            // Verificar las credenciales utilizando el DAO
             Trabajador trabajador = trabajadorDAO.checkLogin(email, hashedPassword);
 
             if (trabajador != null) {
-                // Inicio de sesión exitoso, guardar datos en la sesión y mostrar mensaje
-                UserSession.login(email, hashedPassword);
+                UserSession.login(trabajador); // Guarda el trabajador autenticado en la sesión
                 Utils.ShowAlert("Inicio de sesión exitoso. Bienvenido, " + trabajador.getNombre());
-                cambiarUsuario(); // Cambiar a la escena correspondiente al inicio exitoso
+                cambiarUsuario();
             } else {
-                // Credenciales inválidas, se interrumpe inicio de sesión
                 UserSession.logout();
                 Utils.ShowAlert("Correo o contraseña incorrectos. Inténtelo de nuevo.");
             }
         } catch (SQLException e) {
-            // Manejo de errores en la base de datos
             Utils.ShowAlert("Error al intentar iniciar sesión. Por favor, inténtelo más tarde.");
             e.printStackTrace();
         }
