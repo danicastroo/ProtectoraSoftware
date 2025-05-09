@@ -203,63 +203,64 @@
   8. GRID
 =====================================*/
 /* Estilo general para el GridPane */
-#listaAnimales {
-    -fx-background-color: #f9f9f9; /* Fondo claro */
-    -fx-padding: 10; /* Espaciado interno */
-    -fx-border-color: #cccccc; /* Borde gris */
-    -fx-border-width: 2; /* Grosor del borde */
-    -fx-border-radius: 5; /* Bordes redondeados */
-    -fx-background-radius: 5; /* Fondo redondeado */
+.grid-pane {
+    -fx-background-color: #0a2a4d; /* Fondo oscuro */
+    -fx-border-color: #4f6f90; /* Borde acorde al tema */
+    -fx-border-width: 2px;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+    -fx-padding: 20px;
+    -fx-hgap: 15px; /* Espaciado horizontal */
+    -fx-vgap: 15px; /* Espaciado vertical */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 10, 0.5, 0, 2);
 }
 
-/* Estilo para los contenedores de cada animal (VBox) */
-.animal-box {
-    -fx-background-color: #ffffff; /* Fondo blanco */
-    -fx-border-color: #dddddd; /* Borde gris claro */
-    -fx-border-width: 1; /* Grosor del borde */
-    -fx-border-radius: 5; /* Bordes redondeados */
-    -fx-padding: 10; /* Espaciado interno */
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 5, 0, 2, 2); /* Sombra */
+/* Estilo para las filas del GridPane */
+.fila-animal {
+    -fx-background-color: #123456; /* Fondo de cada fila */
+    -fx-border-color: #4f6f90; /* Borde de las filas */
+    -fx-border-width: 1px;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-padding: 10px;
+    -fx-spacing: 20px; /* Espaciado interno */
+    -fx-alignment: center-left;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 6, 0.3, 0, 1);
+    -fx-transition: transform 0.3s ease, background-color 0.3s ease;
 }
 
-/* Estilo para los textos dentro de cada animal */
-.animal-box Label {
-    -fx-font-family: "Arial"; /* Fuente */
-    -fx-font-size: 14px; /* Tamaño de fuente */
-    -fx-text-fill: #333333; /* Color del texto */
+.fila-animal:hover {
+    -fx-background-color: #1a3a5d; /* Cambio de color al pasar el ratón */
+    -fx-transform: scale(1.02); /* Efecto de zoom */
 }
 
-/* Estilo para los botones */
-.animal-box Button {
-    -fx-background-color: #4CAF50; /* Fondo verde */
-    -fx-text-fill: white; /* Texto blanco */
-    -fx-font-size: 12px; /* Tamaño de fuente */
-    -fx-font-family: "Arial"; /* Fuente */
-    -fx-padding: 5 10; /* Espaciado interno */
-    -fx-border-radius: 5; /* Bordes redondeados */
-    -fx-background-radius: 5; /* Fondo redondeado */
-    -fx-cursor: hand; /* Cambiar cursor al pasar */
+/* Estilo para las etiquetas dentro de las filas */
+.animal-label {
+    -fx-font-size: 16px;
+    -fx-text-fill: #ffffff; /* Texto blanco */
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 4, 0.3, 0, 1);
 }
 
-/* Estilo para los botones al pasar el ratón */
-.animal-box Button:hover {
-    -fx-background-color: #45a049; /* Verde más oscuro */
+/* Estilo para los botones dentro de las filas */
+.fila-animal Button {
+    -fx-background-color: #4f6f90;
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 14px;
+    -fx-padding: 8px 16px;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 6, 0.3, 0, 2);
+    -fx-transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-/* Estilo para los botones de eliminar */
-.animal-box Button:focused {
-    -fx-background-color: #e53935; /* Rojo */
-    -fx-text-fill: white; /* Texto blanco */
+.fila-animal Button:hover {
+    -fx-background-color: #3a5a78;
+    -fx-transform: scale(1.05);
 }
 
-/* Estilo para los botones de detalles */
-.animal-box Button.detalles {
-    -fx-background-color: #2196F3; /* Azul */
-    -fx-text-fill: white; /* Texto blanco */
-}
-
-/* Estilo para los botones de editar */
-.animal-box Button.editar {
-    -fx-background-color: #FFC107; /* Amarillo */
-    -fx-text-fill: black; /* Texto negro */
+.fila-animal Button:pressed {
+    -fx-background-color: #2e4a63;
+    -fx-transform: scale(0.95);
 }

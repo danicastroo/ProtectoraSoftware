@@ -9,6 +9,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 import java.io.IOException;
@@ -114,8 +115,35 @@ public class ModuloAnimalesController extends Controller implements Initializabl
         }
     }
 
+    private HBox crearFilaAnimal(Animal animal) {
+        HBox fila = new HBox();
+        fila.setSpacing(10); // Espaciado entre elementos
+        fila.setStyle("-fx-padding: 10px; -fx-alignment: center-left;");
+
+        // Etiqueta con el nombre del animal
+        Label nombreLabel = new Label(animal.getNombre());
+        nombreLabel.getStyleClass().add("animal-label");
+
+        // Etiqueta con el microchip del animal
+        Label microchipLabel = new Label("Microchip: " + animal.getChip());
+        microchipLabel.getStyleClass().add("animal-label");
+
+        // Botón para ver detalles
+        Button detallesButton = new Button("Ver detalles");
+        detallesButton.setOnAction(event -> verDetalles(animal));
+
+        // Botón para eliminar
+        Button eliminarButton = new Button("Eliminar");
+        eliminarButton.setOnAction(event -> eliminarAnimal(animal));
+
+        // Añadir los elementos al HBox
+        fila.getChildren().addAll(nombreLabel, microchipLabel, detallesButton, eliminarButton);
+
+        return fila;
+    }
+
     private void cargarAnimales() {
-        listaAnimales.getChildren().clear(); // Limpiar el grid antes de llenarlo
+        listaAnimales.getChildren().clear(); // Limpiar el GridPane antes de llenarlo
         int idTrabajador = UserSession.getUser().getIdTrabajador(); // Obtener el ID del trabajador actual
 
         try {
@@ -123,27 +151,16 @@ public class ModuloAnimalesController extends Controller implements Initializabl
             List<Cuida> cuidados = cuidaDAO.findAll(); // Obtener todos los registros de cuidados
 
             AnimalDAO animalDAO = new AnimalDAO();
-            int row = 0;
+            int row = 0; // Contador de filas
 
             for (Cuida cuidado : cuidados) {
                 if (cuidado.getIdTrabajador() == idTrabajador) { // Filtrar por idTrabajador
                     Animal animal = animalDAO.findById(cuidado.getIdAnimal());
                     if (animal != null) {
-                        // Crear un contenedor para cada animal
-                        VBox animalBox = new VBox(10);
-                        animalBox.setStyle("-fx-border-color: black; -fx-padding: 10; -fx-background-color: #f4f4f4;");
-                        animalBox.setPrefWidth(200);
-
-                        // Mostrar información básica del animal
-                        Label nombreLabel = new Label("Nombre: " + animal.getNombre());
-                        Label tipoLabel = new Label("Tipo: " + animal.getTipo());
-                        Label estadoLabel = new Label("Estado: " + animal.getEstado());
-
-                        // Añadir elementos al contenedor
-                        animalBox.getChildren().addAll(nombreLabel, tipoLabel, estadoLabel);
-
-                        // Añadir el contenedor al GridPane
-                        listaAnimales.add(animalBox, 0, row++);
+                        HBox fila = crearFilaAnimal(animal); // Crear la fila del animal
+                        fila.getStyleClass().add("fila-animal"); // Asignar clase CSS
+                        listaAnimales.add(fila, 0, row); // Añadir la fila al GridPane
+                        row++; // Incrementar la fila
                     }
                 }
             }
@@ -153,7 +170,6 @@ public class ModuloAnimalesController extends Controller implements Initializabl
             alert.showAndWait();
         }
     }
-
 
     private void verDetalles(Animal animal) {
         try {
