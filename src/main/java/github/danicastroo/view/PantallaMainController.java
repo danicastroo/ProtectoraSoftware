@@ -1,5 +1,7 @@
 package github.danicastroo.view;
 
+import github.danicastroo.model.entity.Trabajador;
+import github.danicastroo.model.singleton.UserSession;
 import javafx.animation.Interpolator;
 import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
@@ -10,6 +12,7 @@ import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
@@ -34,10 +37,16 @@ public class PantallaMainController extends Controller implements Initializable 
     @FXML
     private StackPane stackPane;
 
+    @FXML
+    private Label usuarioLabel;
+
 
     @Override
     public void onOpen(Object input) throws IOException {
-
+        Trabajador usuario = UserSession.getUser();
+        if (usuario != null) {
+            usuarioLabel.setText("Trabajador: " + usuario.getNombre());
+        }
     }
 
     @Override
@@ -114,7 +123,5 @@ public class PantallaMainController extends Controller implements Initializable 
     private void mostrarAnimales() {
         cargarVista(Scenes.MODULO_ANIMALES);
     }
-
-
 
 }
