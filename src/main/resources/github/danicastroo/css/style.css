@@ -197,3 +197,69 @@
     -fx-fit-height: 100%;
     -fx-background-color: #062748;
 }
+
+
+/*====================================
+  8. GRID
+=====================================*/
+/* Estilo general para el GridPane */
+#listaAnimales {
+    -fx-background-color: #f9f9f9; /* Fondo claro */
+    -fx-padding: 10; /* Espaciado interno */
+    -fx-border-color: #cccccc; /* Borde gris */
+    -fx-border-width: 2; /* Grosor del borde */
+    -fx-border-radius: 5; /* Bordes redondeados */
+    -fx-background-radius: 5; /* Fondo redondeado */
+}
+
+/* Estilo para los contenedores de cada animal (VBox) */
+.animal-box {
+    -fx-background-color: #ffffff; /* Fondo blanco */
+    -fx-border-color: #dddddd; /* Borde gris claro */
+    -fx-border-width: 1; /* Grosor del borde */
+    -fx-border-radius: 5; /* Bordes redondeados */
+    -fx-padding: 10; /* Espaciado interno */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 5, 0, 2, 2); /* Sombra */
+}
+
+/* Estilo para los textos dentro de cada animal */
+.animal-box Label {
+    -fx-font-family: "Arial"; /* Fuente */
+    -fx-font-size: 14px; /* Tamaño de fuente */
+    -fx-text-fill: #333333; /* Color del texto */
+}
+
+/* Estilo para los botones */
+.animal-box Button {
+    -fx-background-color: #4CAF50; /* Fondo verde */
+    -fx-text-fill: white; /* Texto blanco */
+    -fx-font-size: 12px; /* Tamaño de fuente */
+    -fx-font-family: "Arial"; /* Fuente */
+    -fx-padding: 5 10; /* Espaciado interno */
+    -fx-border-radius: 5; /* Bordes redondeados */
+    -fx-background-radius: 5; /* Fondo redondeado */
+    -fx-cursor: hand; /* Cambiar cursor al pasar */
+}
+
+/* Estilo para los botones al pasar el ratón */
+.animal-box Button:hover {
+    -fx-background-color: #45a049; /* Verde más oscuro */
+}
+
+/* Estilo para los botones de eliminar */
+.animal-box Button:focused {
+    -fx-background-color: #e53935; /* Rojo */
+    -fx-text-fill: white; /* Texto blanco */
+}
+
+/* Estilo para los botones de detalles */
+.animal-box Button.detalles {
+    -fx-background-color: #2196F3; /* Azul */
+    -fx-text-fill: white; /* Texto blanco */
+}
+
+/* Estilo para los botones de editar */
+.animal-box Button.editar {
+    -fx-background-color: #FFC107; /* Amarillo */
+    -fx-text-fill: black; /* Texto negro */
+}

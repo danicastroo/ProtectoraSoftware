@@ -18,13 +18,14 @@ public class Animal {
     public Animal() {}
 
     // Constructor
-    public Animal(int idAnimal, String nombre, int chip, int edad, TipoAnimal tipo, LocalDate fechaAdopcion) {
+    public Animal(int idAnimal, String nombre, int chip, int edad, TipoAnimal tipo, LocalDate fechaAdopcion, EstadoAnimal estado) {
         this.idAnimal = idAnimal;
         this.nombre = nombre;
         this.chip = chip;
         this.edad = edad;
         this.tipo = tipo;
         this.fechaAdopcion = fechaAdopcion;
+        this.estado = estado;
     }
 
     //Getters y setters

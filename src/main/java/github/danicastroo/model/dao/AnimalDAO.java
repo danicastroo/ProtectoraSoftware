@@ -84,14 +84,15 @@ public class AnimalDAO implements DAO<Animal> {
     }
 
     private Animal mapResultSetToAnimal(ResultSet rs) throws SQLException {
-        return new Animal(
-                rs.getInt("idAnimal"),
-                rs.getString("nombre"),
-                rs.getInt("chip"),
-                rs.getInt("edad"),
-                TipoAnimal.valueOf(rs.getString("tipo").toUpperCase()),
-                rs.getDate("fechaAdopcion") != null ? rs.getDate("fechaAdopcion").toLocalDate() : null
-        );
+        Animal animal = new Animal();
+        animal.setIdAnimal(rs.getInt("idAnimal"));
+        animal.setNombre(rs.getString("nombre"));
+        animal.setChip(rs.getInt("chip"));
+        animal.setEdad(rs.getInt("edad"));
+        animal.setTipo(TipoAnimal.valueOf(rs.getString("tipo").toUpperCase()));
+        animal.setFechaAdopcion(rs.getDate("fechaAdopcion") != null ? rs.getDate("fechaAdopcion").toLocalDate() : null);
+        animal.setEstado(EstadoAnimal.fromString(rs.getString("estado")));
+        return animal;
     }
 
     @Override
