@@ -9,7 +9,8 @@ public enum Scenes {
     REGISTRO("/github/danicastroo/view/registrar.fxml"),
     MAIN("/github/danicastroo/view/main.fxml"),
     MODULO_INICIO("/github/danicastroo/view/ModuloInicio.fxml"),
-    MODULO_ANIMALES("/github/danicastroo/view/ModuloAnimales.fxml");
+    MODULO_ANIMALES("/github/danicastroo/view/ModuloAnimales.fxml"),
+    MODULO_ADOPTANTES("/github/danicastroo/view/ModuloAdoptantes.fxml");
     private String url;
 
     Scenes(String url) {

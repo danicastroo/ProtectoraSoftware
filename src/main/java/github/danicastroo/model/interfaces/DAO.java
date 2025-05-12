@@ -8,6 +8,6 @@ public interface DAO <T> extends Closeable {
 
     T save(T entity) throws SQLException;
     T delete(T entity) throws SQLException;
-    T findById(int key);
-    List<T> findAll();
+    T findById(int key) throws SQLException;
+    List<T> findAll() throws SQLException;
 }

@@ -4,21 +4,26 @@ public class Adoptante extends Persona {
     private int idAdoptante;
     private String telefono;
     private String email;
+    private String direccion; // Nuevo campo
     private int idAnimal; // FK
+    private String observaciones;
 
-    // Constructor vacío
     public Adoptante() {}
 
-    // Constructor
-    public Adoptante(int idAdoptante, String nombre, String telefono, String email, int idAnimal) {
-        super(nombre); // Inicializa la clase base Persona
+    public Adoptante(int idAdoptante, String nombre, String telefono, String email, String direccion, int idAnimal, String observaciones) {
+        super(nombre);
         this.idAdoptante = idAdoptante;
         this.telefono = telefono;
         this.email = email;
+        this.direccion = direccion;
         this.idAnimal = idAnimal;
+        this.observaciones = observaciones;
     }
 
-    // Getters y setters específicos
+    public String getDireccion() { return direccion; }
+
+    public void setDireccion(String direccion) { this.direccion = direccion; }
+
     public int getIdAdoptante() { return idAdoptante; }
 
     public void setIdAdoptante(int idAdoptante) { this.idAdoptante = idAdoptante; }
@@ -35,7 +40,10 @@ public class Adoptante extends Persona {
 
     public void setIdAnimal(int idAnimal) { this.idAnimal = idAnimal; }
 
-    //Sobreescritura del método mostrarDatos
+    public String getObservaciones() { return observaciones; }
+
+    public void setObservaciones(String observaciones) { this.observaciones = observaciones; }
+
     @Override
     public void mostrarDatos() {
         System.out.println("ID Adoptante: " + idAdoptante);
@@ -43,5 +51,6 @@ public class Adoptante extends Persona {
         System.out.println("Teléfono: " + telefono);
         System.out.println("Email: " + email);
         System.out.println("ID Animal (FK): " + idAnimal);
+        System.out.println("Observaciones: " + observaciones);
     }
 }

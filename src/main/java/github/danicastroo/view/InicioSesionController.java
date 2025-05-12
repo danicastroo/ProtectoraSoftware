@@ -7,6 +7,7 @@ import github.danicastroo.model.singleton.UserSession;
 import github.danicastroo.utils.Utils;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
@@ -54,7 +55,7 @@ public class InicioSesionController extends Controller implements Initializable 
         ContrasenaField.setOnKeyPressed(event -> {
             switch (event.getCode()) {
                 case ENTER:
-                    btnIniciarSesion.fire(); // Simula un clic en el botón
+                    btnIniciarSesion.fire(); //Funciona cuando le das enter
                     break;
                 default:
                     break;
@@ -93,30 +94,43 @@ public class InicioSesionController extends Controller implements Initializable 
 
     @FXML
     private void login() throws SQLException, IOException {
+        boolean isValid = true;
+
         String email = CorreoField.getText().trim();
         String password = ContrasenaField.getText().trim();
 
+        // Validar campos vacíos
         if (email.isEmpty() || password.isEmpty()) {
             Utils.ShowAlert("Falta algún campo por introducir.");
-            return;
+            isValid = false;
         }
 
-        String hashedPassword = Utils.encryptSHA256(password);
+        // Validar formato del correo
+        if (isValid && !Utils.EmailValidator.isValid(email)) {
+            Utils.Alert("Correo inválido", "El correo ingresado no es válido.", "Por favor, introduce un correo válido.", Alert.AlertType.ERROR);
+            isValid = false;
+        }
 
-        try {
-            Trabajador trabajador = trabajadorDAO.checkLogin(email, hashedPassword);
+        if (isValid) {
+            // Encriptar la contraseña
+            String hashedPassword = Utils.encryptSHA256(password);
 
-            if (trabajador != null) {
-                UserSession.login(trabajador); // Guarda el trabajador autenticado en la sesión
-                Utils.ShowAlert("Inicio de sesión exitoso. Bienvenido, " + trabajador.getNombre());
-                cambiarUsuario();
-            } else {
-                UserSession.logout();
-                Utils.ShowAlert("Correo o contraseña incorrectos. Inténtelo de nuevo.");
+            try {
+                // Verificar credenciales
+                Trabajador trabajador = trabajadorDAO.checkLogin(email, hashedPassword);
+
+                if (trabajador != null) {
+                    UserSession.login(trabajador); // Guarda el trabajador autenticado en la sesión
+                    Utils.ShowAlert("Inicio de sesión exitoso. Bienvenido, " + trabajador.getNombre());
+                    cambiarUsuario();
+                } else {
+                    UserSession.logout();
+                    Utils.ShowAlert("Correo o contraseña incorrectos. Inténtelo de nuevo.");
+                }
+            } catch (SQLException e) {
+                Utils.ShowAlert("Error al intentar iniciar sesión. Por favor, inténtelo más tarde.");
+                e.printStackTrace();
             }
-        } catch (SQLException e) {
-            Utils.ShowAlert("Error al intentar iniciar sesión. Por favor, inténtelo más tarde.");
-            e.printStackTrace();
         }
     }
 

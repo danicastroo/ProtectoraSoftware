@@ -58,6 +58,8 @@ public class RegistrarController extends Controller implements Initializable {
 
     @FXML
     private void addUsuario() {
+        boolean isValid = true;
+
         // Instancia del DAO
         TrabajadorDAO userDAO = new TrabajadorDAO();
 
@@ -69,53 +71,54 @@ public class RegistrarController extends Controller implements Initializable {
         // Validar el campo "Nombre"
         if (nombre.isEmpty()) {
             Utils.Alert("Error", "El campo de nombre está vacío", "El nombre es obligatorio. Por favor, complételo.", Alert.AlertType.ERROR);
-            return; // Detener el proceso
+            isValid = false;
         }
 
         // Validar el campo "Correo"
-        if (email.isEmpty()) {
+        if (isValid && email.isEmpty()) {
             Utils.Alert("Error", "El campo correo está vacío", "El correo es obligatorio. Por favor, complételo.", Alert.AlertType.ERROR);
-            return; // Detener el proceso
+            isValid = false;
+        }
+
+        if (isValid && !Utils.EmailValidator.isValid(email)) {
+            Utils.Alert("Correo inválido", "El correo ingresado no es válido.", "Por favor, introduce un correo válido.", Alert.AlertType.ERROR);
+            isValid = false;
         }
 
         // Validar el campo "Contraseña"
-        if (password.isEmpty()) {
+        if (isValid && password.isEmpty()) {
             Utils.Alert("Error", "El campo contraseña está vacío", "La contraseña es obligatoria. Por favor, complétela.", Alert.AlertType.ERROR);
-            return; // Detener el proceso
+            isValid = false;
         }
 
-        try {
-            // Comprobar si el nombre ya existe
-            if (userDAO.findByUsername(nombre) != null) {
-                Utils.Alert("Error", "Nombre Existente", "El nombre ya está en uso. Por favor, elige otro.", Alert.AlertType.ERROR);
-                return; // Evitar continuar con el registro
+        if (isValid) {
+            try {
+                // Comprobar si el nombre ya existe
+                if (userDAO.findByUsername(nombre) != null) {
+                    Utils.Alert("Error", "Nombre Existente", "El nombre ya está en uso. Por favor, elige otro.", Alert.AlertType.ERROR);
+                    isValid = false;
+                }
+
+                if (isValid && userDAO.isEmailRegistered(email)) {
+                    Utils.Alert("Error", "Correo ya registrado", "El correo electrónico ya está en uso. Por favor, usa otro.", Alert.AlertType.ERROR);
+                    isValid = false;
+                }
+
+                if (isValid) {
+                    // Encriptar la contraseña antes de guardarla
+                    password = Utils.encryptSHA256(password);
+
+                    // Crear y guardar el objeto Trabajador
+                    Trabajador trabajador = new Trabajador(nombre, 0, null, email, password);
+                    userDAO.save(trabajador);
+
+                    // Notificar registro exitoso
+                    Utils.Alert("Registro Exitoso", "Usuario Registrado", "El usuario se ha registrado correctamente.", Alert.AlertType.INFORMATION);
+                }
+            } catch (SQLException e) {
+                Utils.Alert("Error", "Error de base de datos", "No se pudo registrar al usuario: " + e.getMessage(), Alert.AlertType.ERROR);
+                e.printStackTrace();
             }
-
-            if (userDAO.isEmailRegistered(email)) {
-                Utils.Alert("Error", "Correo ya registrado", "El correo electrónico ya está en uso. Por favor, usa otro.", Alert.AlertType.ERROR);
-                return;
-            }
-
-            if (userDAO.isNameRegistered(nombre)) {
-                Utils.Alert("Error", "Nombre ya registrado", "El nombre '" + nombre + "' ya está en uso. Por favor elige otro.", Alert.AlertType.ERROR);
-                return;
-            }
-
-
-
-
-            // Encriptar la contraseña antes de guardarla
-            password = Utils.encryptSHA256(password);
-
-            // Crear y guardar el objeto Trabajador
-            Trabajador trabajador = new Trabajador(nombre, 0, null, email, password);            userDAO.save(trabajador);
-
-            // Notificar registro exitoso
-            Utils.Alert("Registro Exitoso", "Usuario Registrado", "El usuario se ha registrado correctamente.", Alert.AlertType.INFORMATION);
-
-        } catch (SQLException e) {
-            Utils.Alert("Error", "Error de base de datos", "No se pudo registrar al usuario: " + e.getMessage(), Alert.AlertType.ERROR);
-            e.printStackTrace();
         }
     }
 

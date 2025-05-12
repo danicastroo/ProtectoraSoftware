@@ -131,12 +131,6 @@ public class Animal {
 
     @Override
     public String toString() {
-        return "Animal{" +
-                "idAnimal=" + idAnimal +
-                ", nombre='" + nombre + '\'' +
-                ", edad=" + edad +
-                ", tipo='" + tipo + '\'' +
-                ", fechaAdopcion='" + fechaAdopcion + '\'' +
-                '}';
+        return tipo + " - " + nombre + " (Chip: " + (chip != null && !chip.isEmpty() ? chip : "Sin chip") + ")";
     }
 }

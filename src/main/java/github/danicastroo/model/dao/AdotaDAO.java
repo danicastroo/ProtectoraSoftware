@@ -1,0 +1,91 @@
+package github.danicastroo.model.dao;
+
+import github.danicastroo.model.connection.ConnectionDB;
+import github.danicastroo.model.entity.Adopta;
+import github.danicastroo.model.interfaces.AdoptaDAO;
+import github.danicastroo.model.interfaces.DAO;
+
+import java.io.IOException;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+
+public class AdotaDAO implements AdoptaDAO {
+
+
+    @Override
+    public Adopta save(Adopta adopta) throws SQLException {
+        String query = "INSERT INTO adopta (idAdoptante, idAnimal, fechaAdopcion, observaciones) VALUES (?, ?, ?, ?)";
+        try (Connection conn = ConnectionDB.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS)) {
+
+            stmt.setInt(1, adopta.getIdAdoptante());
+            stmt.setInt(2, adopta.getIdAnimal());
+            stmt.setDate(3, adopta.getFechaAdopcion() != null ? Date.valueOf(adopta.getFechaAdopcion()) : null);
+            stmt.setString(4, adopta.getObservaciones());
+
+            stmt.executeUpdate();
+
+            ResultSet rs = stmt.getGeneratedKeys();
+            if (rs.next()) {
+                adopta.setIdAdopta(rs.getInt(1));
+            }
+        }
+        return adopta;
+    }
+
+    @Override
+    public Adopta delete(Adopta adopta) throws SQLException {
+        String query = "DELETE FROM adopta WHERE idAdopta = ?";
+        try (Connection conn = ConnectionDB.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setInt(1, adopta.getIdAdopta());
+            stmt.executeUpdate();
+        }
+        return adopta;
+    }
+
+
+
+    @Override
+    public Adopta findById(int id) throws SQLException {
+        String query = "SELECT * FROM adopta WHERE idAdopta = ?";
+        try (Connection conn = ConnectionDB.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setInt(1, id);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return mapResultSetToAdopta(rs);
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public List<Adopta> findAll() throws SQLException {
+        List<Adopta> adopciones = new ArrayList<>();
+        String query = "SELECT * FROM adopta";
+        try (Connection conn = ConnectionDB.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                adopciones.add(mapResultSetToAdopta(rs));
+            }
+        }
+        return adopciones;
+    }
+    private Adopta mapResultSetToAdopta(ResultSet rs) throws SQLException {
+        Adopta adopta = new Adopta();
+        adopta.setIdAdopta(rs.getInt("idAdopta"));
+        adopta.setIdAdoptante(rs.getInt("idAdoptante"));
+        adopta.setIdAnimal(rs.getInt("idAnimal"));
+        adopta.setFechaAdopcion(rs.getDate("fechaAdopcion") != null ? rs.getDate("fechaAdopcion").toLocalDate() : null);
+        adopta.setObservaciones(rs.getString("observaciones"));
+        return adopta;
+    }
+}
+

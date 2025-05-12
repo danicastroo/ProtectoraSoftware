@@ -18,7 +18,7 @@
             <Image url="@../images/fondoInicial.jpg" />
          </image>
       </ImageView>
-      <Button fx:id="btnModuloInicio" layoutX="-52.0" layoutY="101.0" mnemonicParsing="false" onAction="#mostrarInicio" prefHeight="46.0" prefWidth="232.0" style="-fx-alignment: TOP_RIGHT;" styleClass="button-modern" stylesheets="@../css/style.css" text="Inicio">
+      <Button fx:id="btnModuloInicio" layoutX="-52.0" layoutY="100.0" mnemonicParsing="false" onAction="#mostrarInicio" prefHeight="46.0" prefWidth="232.0" style="-fx-alignment: TOP_RIGHT;" styleClass="button-modern" stylesheets="@../css/style.css" text="Inicio">
          <font>
             <Font size="8.0" />
          </font>
@@ -61,5 +61,18 @@
             <Font size="7.0" />
          </font>
       </Label>
+      <ImageView fitHeight="26.0" fitWidth="27.0" layoutX="1275.0" layoutY="6.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../images/huella.png" />
+         </image>
+      </ImageView>
+      <Button fx:id="btnModuloAdoptantes" layoutX="-52.0" layoutY="260.0" mnemonicParsing="false" onAction="#mostrarAdoptantes" prefHeight="46.0" prefWidth="232.0" style="-fx-alignment: TOP_RIGHT;" styleClass="button-modern" stylesheets="@../css/style.css" text="Adoptantes">
+         <font>
+            <Font size="8.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Button>
    </children>
 </AnchorPane>

@@ -35,6 +35,9 @@ public class PantallaMainController extends Controller implements Initializable 
     private Button btnModuloAnimales;
 
     @FXML
+    private Button btnModuloAdoptantes;
+
+    @FXML
     private StackPane stackPane;
 
     @FXML
@@ -124,4 +127,8 @@ public class PantallaMainController extends Controller implements Initializable 
         cargarVista(Scenes.MODULO_ANIMALES);
     }
 
+    @FXML
+    private void mostrarAdoptantes() {
+        cargarVista(Scenes.MODULO_ADOPTANTES);
+    }
 }
