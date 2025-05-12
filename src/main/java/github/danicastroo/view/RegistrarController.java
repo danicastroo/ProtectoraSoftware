@@ -108,8 +108,7 @@ public class RegistrarController extends Controller implements Initializable {
             password = Utils.encryptSHA256(password);
 
             // Crear y guardar el objeto Trabajador
-            Trabajador trabajador = new Trabajador(nombre, 0, null, null, email, password);
-            userDAO.save(trabajador);
+            Trabajador trabajador = new Trabajador(nombre, 0, null, email, password);            userDAO.save(trabajador);
 
             // Notificar registro exitoso
             Utils.Alert("Registro Exitoso", "Usuario Registrado", "El usuario se ha registrado correctamente.", Alert.AlertType.INFORMATION);

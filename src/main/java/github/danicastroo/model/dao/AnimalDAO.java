@@ -20,7 +20,7 @@ public class AnimalDAO implements DAO<Animal> {
              PreparedStatement stmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
 
             stmt.setString(1, animal.getNombre());
-            stmt.setInt(2, animal.getChip());
+            stmt.setString(2, animal.getChip());
             stmt.setInt(3, animal.getEdad());
             stmt.setString(4, animal.getTipo().toString());
             stmt.setString(5, animal.getEstado().toString());
@@ -87,7 +87,7 @@ public class AnimalDAO implements DAO<Animal> {
         Animal animal = new Animal();
         animal.setIdAnimal(rs.getInt("idAnimal"));
         animal.setNombre(rs.getString("nombre"));
-        animal.setChip(rs.getInt("chip"));
+        animal.setChip(rs.getString("chip"));
         animal.setEdad(rs.getInt("edad"));
         animal.setTipo(TipoAnimal.valueOf(rs.getString("tipo").toUpperCase()));
         animal.setFechaAdopcion(rs.getDate("fechaAdopcion") != null ? rs.getDate("fechaAdopcion").toLocalDate() : null);

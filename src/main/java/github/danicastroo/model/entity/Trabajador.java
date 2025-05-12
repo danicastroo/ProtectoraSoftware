@@ -3,18 +3,16 @@ package github.danicastroo.model.entity;
 public class Trabajador extends Persona {
     private int idTrabajador;
     private String estado;
-    private String ubicacion;
     private String email;
     private String password;
 
     // Constructor vacío
     public Trabajador() {}
 
-    public Trabajador(String nombre, int idTrabajador, String estado, String ubicacion, String email, String password) {
+    public Trabajador(String nombre, int idTrabajador, String estado, String email, String password) {
         super(nombre);
         this.idTrabajador = idTrabajador;
         this.estado = estado;
-        this.ubicacion = ubicacion;
         this.email = email;
         this.password = password;
     }
@@ -29,9 +27,6 @@ public class Trabajador extends Persona {
     public String getEstado() { return estado; }
     public void setEstado(String estado) { this.estado = estado; }
 
-    public String getUbicacion() { return ubicacion; }
-    public void setUbicacion(String ubicacion) { this.ubicacion = ubicacion; }
-
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }
 
@@ -45,6 +40,5 @@ public class Trabajador extends Persona {
         System.out.println(" Nombre: " + nombre);
         System.out.println(" Estado: " + estado);
         System.out.println(" Email: " + email);
-        System.out.println(" Ubicación: " + ubicacion);
     }
 }

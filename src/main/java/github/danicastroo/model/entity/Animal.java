@@ -8,7 +8,7 @@ import java.util.Objects;
 public class Animal {
     private int idAnimal;
     private String nombre;
-    private int chip;
+    private String chip;
     private int edad;
     private TipoAnimal tipo;
     private LocalDate fechaAdopcion;
@@ -18,7 +18,7 @@ public class Animal {
     public Animal() {}
 
     // Constructor
-    public Animal(int idAnimal, String nombre, int chip, int edad, TipoAnimal tipo, LocalDate fechaAdopcion, EstadoAnimal estado) {
+    public Animal(int idAnimal, String nombre, String chip, int edad, TipoAnimal tipo, LocalDate fechaAdopcion, EstadoAnimal estado) {
         this.idAnimal = idAnimal;
         this.nombre = nombre;
         this.chip = chip;
@@ -29,8 +29,8 @@ public class Animal {
     }
 
     //Getters y setters
-    public int getChip() { return chip; }
-    public void setChip(int chip) { this.chip = chip;}
+    public String getChip() { return chip; }
+    public void setChip(String chip) { this.chip = chip;}
 
     public int getIdAnimal() {
         return idAnimal;
@@ -79,7 +79,7 @@ public class Animal {
     /**
      * Método para actualizar los datos del animal
      */
-    public void actualizarDatos(String nombre, int chip, int edad, TipoAnimal tipo, LocalDate fechaAdopcion) {
+    public void actualizarDatos(String nombre, String chip, int edad, TipoAnimal tipo, LocalDate fechaAdopcion) {
         this.nombre = nombre;
         this.chip = chip;
         this.edad = edad;

@@ -10,12 +10,11 @@ import java.util.List;
 
 public class TrabajadorDAO implements InterfaceTrabajadorDAO<Trabajador> {
 
-    private final static String INSERT = "INSERT INTO trabajador (nombre, estado, ubicacion, email, password) VALUES (?,?,?,?,?)";
-    private final static String UPDATE = "SET nombre = ?, estado = ?, ubicacion = ?, email = ?, password = ? + WHERE idTrabajador = ?";
+    private final static String INSERT = "INSERT INTO trabajador (nombre, estado, email, password) VALUES (?,?,?,?)";
+    private final static String UPDATE = "UPDATE trabajador SET nombre = ?, estado = ?, email = ?, password = ? WHERE idTrabajador = ?";
     private final static String DELETE = "DELETE FROM trabajador WHERE idTrabajador=?";
-    private final static String FINDBYUSERNAME = "SELECT idTrabajador, nombre, estado, ubicacion, email, password FROM trabajador WHERE nombre=?";
+    private final static String FINDBYUSERNAME = "SELECT idTrabajador, nombre, estado, email, password FROM trabajador WHERE nombre=?";
     private final static String QUERY = "SELECT nombre FROM trabajador WHERE email=? AND password=?";
-
     private Connection conn;
 
     /**
@@ -62,7 +61,6 @@ public class TrabajadorDAO implements InterfaceTrabajadorDAO<Trabajador> {
                     trabajador.setIdTrabajador(rs.getInt("idTrabajador"));
                     trabajador.setNombre(rs.getString("nombre"));  // Cambia el tipo al corregir la tabla
                     trabajador.setEstado(rs.getString("estado"));
-                    trabajador.setUbicacion(rs.getString("ubicacion"));
                     trabajador.setEmail(rs.getString("email"));
                     trabajador.setPassword(rs.getString("password"));
                     return trabajador;
@@ -77,44 +75,32 @@ public class TrabajadorDAO implements InterfaceTrabajadorDAO<Trabajador> {
     }
 
 
+
     @Override
     public Trabajador checkLogin(String email, String password) throws SQLException {
-        // Consulta SQL para validar credenciales y obtener datos adicionales (incluyendo el nombre)
-        String query = "SELECT t.idTrabajador, t.estado, t.ubicacion, t.email, p.nombre " +
+        String query = "SELECT t.idTrabajador, t.estado, t.email, p.nombre " +
                 "FROM trabajador t " +
                 "INNER JOIN persona p ON t.idTrabajador = p.idPersona " +
                 "WHERE t.email = ? AND t.password = ?";
 
-        // Inicializamos el objeto Trabajador en null
         Trabajador trabajador = null;
 
-        // Conexión a la base de datos
         try (Connection conn = ConnectionDB.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
 
-            // Asignar los parámetros de la consulta
             stmt.setString(1, email);
             stmt.setString(2, password);
 
-            // Ejecutar la consulta y procesar el resultado
             ResultSet resultSet = stmt.executeQuery();
-            boolean encontrado = resultSet.next(); // Verificar si hay un resultado
-
-            if (encontrado) {
-                // Si se encuentra un resultado, creamos el objeto Trabajador
+            if (resultSet.next()) {
                 trabajador = new Trabajador();
                 trabajador.setIdTrabajador(resultSet.getInt("idTrabajador"));
                 trabajador.setEstado(resultSet.getString("estado"));
-                trabajador.setUbicacion(resultSet.getString("ubicacion"));
                 trabajador.setEmail(resultSet.getString("email"));
-                trabajador.setNombre(resultSet.getString("nombre")); // Establecer el nombre desde la tabla Persona
+                trabajador.setNombre(resultSet.getString("nombre"));
             }
-
-            // Cerramos el ResultSet manualmente
             resultSet.close();
         }
-
-        // Retornamos el objeto Trabajador (puede ser null si no se encontró nada)
         return trabajador;
     }
 
@@ -123,41 +109,37 @@ public class TrabajadorDAO implements InterfaceTrabajadorDAO<Trabajador> {
     @Override
     public Trabajador save(Trabajador trabajador) throws SQLException {
         String insertPersonaSQL = "INSERT INTO persona (nombre, email) VALUES (?, ?)";
-        String insertTrabajadorSQL = "INSERT INTO trabajador (idTrabajador, estado, ubicacion, email, password) VALUES (?, ?, ?, ?, ?)";
+        String insertTrabajadorSQL = "INSERT INTO trabajador (idTrabajador, estado, email, password) VALUES (?, ?, ?, ?)";
 
         try (Connection conn = ConnectionDB.getConnection()) {
-            conn.setAutoCommit(false); // Habilitar transacciones
+            conn.setAutoCommit(false);
 
             try (PreparedStatement personaStmt = conn.prepareStatement(insertPersonaSQL, PreparedStatement.RETURN_GENERATED_KEYS);
                  PreparedStatement trabajadorStmt = conn.prepareStatement(insertTrabajadorSQL)) {
 
-                // Insertar en tabla 'persona'
                 personaStmt.setString(1, trabajador.getNombre());
                 personaStmt.setString(2, trabajador.getEmail());
                 personaStmt.executeUpdate();
 
-                // Obtener id generado para persona
                 ResultSet rs = personaStmt.getGeneratedKeys();
                 if (rs.next()) {
                     int idPersona = rs.getInt(1);
 
-                    // Insertar en tabla 'trabajador' usando id generado
                     trabajadorStmt.setInt(1, idPersona);
                     trabajadorStmt.setString(2, trabajador.getEstado());
-                    trabajadorStmt.setString(3, trabajador.getUbicacion());
-                    trabajadorStmt.setString(4, trabajador.getEmail());
-                    trabajadorStmt.setString(5, trabajador.getPassword());
+                    trabajadorStmt.setString(3, trabajador.getEmail());
+                    trabajadorStmt.setString(4, trabajador.getPassword());
                     trabajadorStmt.executeUpdate();
 
-                    conn.commit(); // Confirmar la transacción
+                    conn.commit();
                 } else {
                     throw new SQLException("No se pudo generar el ID para la tabla 'persona'.");
                 }
             } catch (SQLIntegrityConstraintViolationException e) {
-                conn.rollback(); // Revertir la transacción en caso de error
+                conn.rollback();
                 throw new SQLException("El nombre ya está ocupado o el correo ya está en uso.", e);
             } catch (SQLException e) {
-                conn.rollback(); // Revertir la transacción en caso de error
+                conn.rollback();
                 throw e;
             }
         }

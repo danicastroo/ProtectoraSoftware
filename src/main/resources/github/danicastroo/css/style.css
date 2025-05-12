@@ -264,3 +264,13 @@
     -fx-background-color: #2e4a63;
     -fx-transform: scale(0.95);
 }
+
+/*====================================
+  9. WEBVIEW
+=====================================*/
+/* Estilo para WebView transparente */
+.web-view {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+}

@@ -5,6 +5,7 @@ import github.danicastroo.model.dao.AnimalDAO;
 import github.danicastroo.model.dao.CuidaDAO;
 import github.danicastroo.model.entity.*;
 import github.danicastroo.model.singleton.UserSession;
+import github.danicastroo.utils.Utils;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -54,9 +55,14 @@ public class ModuloAnimalesController extends Controller implements Initializabl
                 throw new IllegalArgumentException("Todos los campos obligatorios deben estar llenos.");
             }
 
-            // Validar que los valores numéricos sean correctos
-            int edad = Integer.parseInt(edadField.getText());
-            int microchip = Integer.parseInt(microchipField.getText());
+            String edadTexto = edadField.getText();
+            if (!edadTexto.matches("\\d{1,3}")) {
+                throw new IllegalArgumentException("La edad debe ser un número entero de máximo 3 dígitos.");
+            }
+            int edad = Integer.parseInt(edadTexto);
+
+
+            String microchip = microchipField.getText();
 
             // Validar que se haya seleccionado un tipo y estado
             TipoAnimal tipo = tipoComboBox.getValue();
@@ -67,8 +73,8 @@ public class ModuloAnimalesController extends Controller implements Initializabl
 
             // Validar la fecha de adopción
             LocalDate fechaAdopcion = fechaAdopcionPicker.getValue();
-            if (fechaAdopcion == null) {
-                throw new IllegalArgumentException("Debe seleccionar una fecha de adopción.");
+            if (estado == EstadoAnimal.ADOPTADO && fechaAdopcion == null) {
+                throw new IllegalArgumentException("Debes colocar una fecha de adopción porque está adoptado.");
             }
 
             // Crear el objeto Animal
@@ -97,7 +103,6 @@ public class ModuloAnimalesController extends Controller implements Initializabl
                 Alert alert = new Alert(Alert.AlertType.INFORMATION, "Animal y datos de cuidado guardados correctamente.");
                 alert.showAndWait();
 
-                // Recargar la lista de animales
                 cargarAnimales();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -120,6 +125,18 @@ public class ModuloAnimalesController extends Controller implements Initializabl
         fila.setSpacing(10); // Espaciado entre elementos
         fila.setStyle("-fx-padding: 10px; -fx-alignment: center-left;");
 
+        // Botón para ver detalles
+        Button detallesButton = new Button("Ver detalles");
+        detallesButton.setOnAction(event -> verDetalles(animal));
+
+        // Botón para editar
+        Button editarButton = new Button("Editar");
+        editarButton.setOnAction(event -> editarAnimal(animal));
+
+        // Botón para eliminar
+        Button eliminarButton = new Button("Eliminar");
+        eliminarButton.setOnAction(event -> eliminarAnimal(animal));
+
         // Etiqueta con el nombre del animal
         Label nombreLabel = new Label(animal.getNombre());
         nombreLabel.getStyleClass().add("animal-label");
@@ -128,16 +145,8 @@ public class ModuloAnimalesController extends Controller implements Initializabl
         Label microchipLabel = new Label("Microchip: " + animal.getChip());
         microchipLabel.getStyleClass().add("animal-label");
 
-        // Botón para ver detalles
-        Button detallesButton = new Button("Ver detalles");
-        detallesButton.setOnAction(event -> verDetalles(animal));
-
-        // Botón para eliminar
-        Button eliminarButton = new Button("Eliminar");
-        eliminarButton.setOnAction(event -> eliminarAnimal(animal));
-
-        // Añadir los elementos al HBox
-        fila.getChildren().addAll(nombreLabel, microchipLabel, detallesButton, eliminarButton);
+        // Añadir los elementos al HBox en el orden deseado
+        fila.getChildren().addAll(detallesButton, editarButton, eliminarButton, nombreLabel, microchipLabel);
 
         return fila;
     }
@@ -174,24 +183,23 @@ public class ModuloAnimalesController extends Controller implements Initializabl
     private void verDetalles(Animal animal) {
         try {
             CuidaDAO cuidaDAO = new CuidaDAO();
-            List<Cuida> cuidados = cuidaDAO.findAll(); // Obtener todos los registros de cuidados
+            List<Cuida> cuidados = cuidaDAO.findAll();
 
             Cuida cuidado = null;
             for (Cuida c : cuidados) {
                 if (c.getIdAnimal() == animal.getIdAnimal()) {
                     cuidado = c;
-                    break; // Salir del bucle una vez encontrado
+                    break;
                 }
             }
 
             String tipoCuidado = (cuidado != null) ? cuidado.getTipo() : "No especificado";
             String observaciones = (cuidado != null) ? cuidado.getObservaciones() : "No especificado";
 
-            // Mostrar los detalles en un cuadro de diálogo
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Detalles del Animal");
-            alert.setHeaderText("Información de " + animal.getNombre());
-            alert.setContentText(
+            // Usar Utils.Alert para mostrar los detalles
+            Utils.Alert(
+                    "Detalles del Animal",
+                    "Información de " + animal.getNombre(),
                     "Nombre: " + animal.getNombre() + "\n" +
                             "Edad: " + animal.getEdad() + "\n" +
                             "Microchip: " + animal.getChip() + "\n" +
@@ -199,20 +207,83 @@ public class ModuloAnimalesController extends Controller implements Initializabl
                             "Estado: " + animal.getEstado() + "\n" +
                             "Fecha de Adopción: " + animal.getFechaAdopcion() + "\n" +
                             "Tipo de Cuidado: " + tipoCuidado + "\n" +
-                            "Observaciones: " + observaciones
+                            "Observaciones: " + observaciones,
+                    Alert.AlertType.INFORMATION
             );
-            alert.showAndWait();
         } catch (Exception e) {
             e.printStackTrace();
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Error al obtener los detalles del animal.");
-            alert.showAndWait();
+            Utils.Alert("Error", "Error al obtener los detalles del animal.", e.getMessage(), Alert.AlertType.ERROR);
         }
     }
 
     private void editarAnimal(Animal animal) {
-        // Aquí puedes abrir un formulario para editar el animal
-        Alert alert = new Alert(Alert.AlertType.INFORMATION, "Función para editar " + animal.getNombre() + " aún no implementada.");
-        alert.showAndWait();
+        try {
+            // Cargar los datos del animal en los campos
+            nombreField.setText(animal.getNombre());
+            edadField.setText(String.valueOf(animal.getEdad()));
+            microchipField.setText(animal.getChip());
+            tipoComboBox.setValue(animal.getTipo());
+            estadoComboBox.setValue(animal.getEstado());
+            fechaAdopcionPicker.setValue(animal.getFechaAdopcion());
+
+            // Cambiar la acción del botón "Guardar" para actualizar
+            guardarAnimalButton.setText("Actualizar");
+            guardarAnimalButton.setOnAction(event -> actualizarAnimal(animal));
+        } catch (Exception e) {
+            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Error al cargar los datos del animal para editar.");
+            alert.showAndWait();
+        }
+    }
+
+    private void actualizarAnimal(Animal animal) {
+        try {
+            // Validar los campos como en el método guardarAnimal
+            if (nombreField.getText().isEmpty() || edadField.getText().isEmpty() || microchipField.getText().isEmpty() ||
+                    tipoCuidadoField.getText().isEmpty() || observacionesField.getText().isEmpty()) {
+                throw new IllegalArgumentException("Todos los campos obligatorios deben estar llenos.");
+            }
+
+            String edadTexto = edadField.getText();
+            if (!edadTexto.matches("\\d{1,3}")) {
+                throw new IllegalArgumentException("La edad debe ser un número entero de máximo 3 dígitos.");
+            }
+            int edad = Integer.parseInt(edadTexto);
+
+            String microchip = microchipField.getText();
+            TipoAnimal tipo = tipoComboBox.getValue();
+            EstadoAnimal estado = estadoComboBox.getValue();
+            LocalDate fechaAdopcion = fechaAdopcionPicker.getValue();
+
+            if (estado == EstadoAnimal.ADOPTADO && fechaAdopcion == null) {
+                throw new IllegalArgumentException("Debes colocar una fecha de adopción porque está adoptado.");
+            }
+
+            // Actualizar los datos del animal
+            animal.actualizarDatos(nombreField.getText(), microchip, edad, tipo, fechaAdopcion);
+            animal.setEstado(estado);
+
+            // Guardar los cambios en la base de datos
+            AnimalDAO animalDAO = new AnimalDAO();
+            animalDAO.save(animal);
+
+            // Restaurar el botón "Guardar"
+            guardarAnimalButton.setText("Guardar Animal");
+            guardarAnimalButton.setOnAction(event -> guardarAnimal());
+
+            // Recargar la lista de animales
+            cargarAnimales();
+
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "Animal actualizado correctamente.");
+            alert.showAndWait();
+        } catch (IllegalArgumentException e) {
+            Alert alert = new Alert(Alert.AlertType.WARNING, e.getMessage());
+            alert.showAndWait();
+        } catch (Exception e) {
+            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Error al actualizar el animal.");
+            alert.showAndWait();
+        }
     }
 
     private void eliminarAnimal(Animal animal) {
@@ -226,6 +297,7 @@ public class ModuloAnimalesController extends Controller implements Initializabl
             e.printStackTrace();
             Alert alert = new Alert(Alert.AlertType.ERROR, "Error al eliminar el animal.");
             alert.showAndWait();
+            //Aquí he utilziado el Alert de javafx porque el que tengo en utils es un show(), para que funcione como yo quiero tiene que ser un showAndWait()
         }
     }
 

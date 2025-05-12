@@ -1,5 +1,6 @@
 package github.danicastroo.utils;
 
+import github.danicastroo.App;
 import javafx.scene.control.Alert;
 import javafx.scene.layout.Region;
 import javafx.stage.Stage;
@@ -34,11 +35,18 @@ public class Utils {
         alertDialog.setHeaderText(header);
         alertDialog.setContentText(text);
 
-        // Mostrar el cuadro de diálogo de manera no bloqueante
+        // Asociar el cuadro de diálogo al Stage principal
+        if (App.stage != null) {
+            alertDialog.initOwner(App.stage);
+        }
+
+        // Mostrar el cuadro de diálogo sin bloquear
         alertDialog.show();
 
-        Stage s = (Stage) alertDialog.getDialogPane().getScene().getWindow();
-        s.toFront();
+        // Asegurar que la ventana principal permanezca activa
+        if (App.stage != null) {
+            App.stage.toFront();
+        }
 
         return alertDialog;
     }

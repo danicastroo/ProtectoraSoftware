@@ -5,11 +5,13 @@
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.effect.Glow?>
+<?import javafx.scene.effect.Shadow?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
+<?import javafx.scene.web.WebView?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="github.danicastroo.view.InicioSesionController">
    <children>
@@ -57,10 +59,9 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Text>
-      <ImageView fitHeight="136.0" fitWidth="136.0" layoutX="187.0" layoutY="217.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../images/logo.png" />
-         </image>
-      </ImageView>
+      <WebView fx:id="ratoncito" layoutX="126.0" layoutY="187.0" prefHeight="226.0" prefWidth="237.0">
+         <effect>
+            <Shadow />
+         </effect></WebView>
    </children>
 </AnchorPane>

@@ -10,6 +10,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
+import javafx.scene.web.WebView;
 
 import java.io.IOException;
 import java.net.URL;
@@ -27,6 +28,8 @@ public class InicioSesionController extends Controller implements Initializable 
     private TextField CorreoField;
     @FXML
     private TextField ContrasenaField;
+    @FXML
+    private WebView ratoncito;
 
     private TrabajadorDAO trabajadorDAO;
 
@@ -57,7 +60,21 @@ public class InicioSesionController extends Controller implements Initializable 
                     break;
             }
         });
+
+        // Cargar el contenido del WebView
+        cargarRatoncito();
+
+
     }
+
+    @FXML
+    private void cargarRatoncito(){
+        String htmlPath = getClass().getResource("/github/danicastroo/images/ratoncito.html").toExternalForm();
+        ratoncito.setStyle("-fx-background-color: transparent;");
+        ratoncito.setOpacity(1.0); // Asegura que sea visible
+        ratoncito.getEngine().load(htmlPath);
+    }
+
 
     @FXML
     private void cambiarUsuario() throws IOException {

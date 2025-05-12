@@ -52,7 +52,6 @@ public class DatabaseTest {
             trabajador.setIdTrabajador(1);
             trabajador.setNombre("John Doe");
             trabajador.setEstado("Activo");
-            trabajador.setUbicacion("Oficina Central");
             trabajador.setEmail("john.doe@example.com");
             trabajador.setPassword("password123");
 
