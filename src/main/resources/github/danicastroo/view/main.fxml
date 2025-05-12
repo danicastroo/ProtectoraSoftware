@@ -61,5 +61,10 @@
             <Font size="7.0" />
          </font>
       </Label>
+      <ImageView fitHeight="26.0" fitWidth="27.0" layoutX="1275.0" layoutY="6.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../images/huella.png" />
+         </image>
+      </ImageView>
    </children>
 </AnchorPane>
