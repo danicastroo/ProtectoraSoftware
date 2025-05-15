@@ -12,6 +12,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import javafx.scene.web.WebView;
+import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
@@ -107,7 +108,7 @@ public class InicioSesionController extends Controller implements Initializable 
 
         // Validar formato del correo
         if (isValid && !Utils.EmailValidator.isValid(email)) {
-            Utils.Alert("Correo inválido", "El correo ingresado no es válido.", "Por favor, introduce un correo válido.", Alert.AlertType.ERROR);
+            Utils.Alert("Correo inválido", "El correo ingresado no es válido.", "Por favor, introduce un correo válido.", Alert.AlertType.ERROR, null);
             isValid = false;
         }
 

@@ -12,6 +12,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
@@ -208,11 +209,12 @@ public class ModuloAnimalesController extends Controller implements Initializabl
                             "Fecha de Adopción: " + animal.getFechaAdopcion() + "\n" +
                             "Tipo de Cuidado: " + tipoCuidado + "\n" +
                             "Observaciones: " + observaciones,
-                    Alert.AlertType.INFORMATION
+                    Alert.AlertType.INFORMATION,
+                    (Stage) listaAnimales.getScene().getWindow()
             );
         } catch (Exception e) {
             e.printStackTrace();
-            Utils.Alert("Error", "Error al obtener los detalles del animal.", e.getMessage(), Alert.AlertType.ERROR);
+            Utils.Alert("Error", "Error al obtener los detalles del animal.", e.getMessage(), Alert.AlertType.ERROR, null);
         }
     }
 

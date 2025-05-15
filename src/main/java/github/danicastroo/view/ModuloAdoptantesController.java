@@ -77,7 +77,7 @@ public class ModuloAdoptantesController extends Controller implements Initializa
             animalesComboBox.getItems().clear();
             animalesComboBox.getItems().addAll(animales);
         } catch (Exception e) {
-            Utils.Alert("Error", "Error al cargar los animales adoptados", e.getMessage(), Alert.AlertType.ERROR);
+            Utils.Alert("Error", "Error al cargar los animales adoptados", e.getMessage(), Alert.AlertType.ERROR, null);
             e.printStackTrace();
         }
     }
@@ -119,15 +119,15 @@ public class ModuloAdoptantesController extends Controller implements Initializa
 
             conn.commit(); // Confirma la transacción
 
-            Utils.Alert("Éxito", "Adoptante guardado", "El adoptante y la adopción han sido registrados correctamente.", Alert.AlertType.INFORMATION);
+            Utils.Alert("Éxito", "Adoptante guardado", "El adoptante y la adopción han sido registrados correctamente.", Alert.AlertType.INFORMATION, null);
 
             limpiarCampos();
             cargarAdoptantes(); // Actualiza la tabla
         } catch (IllegalArgumentException e) {
-            Utils.Alert("Error", "Error al guardar el adoptante", e.getMessage(), Alert.AlertType.ERROR);
+            Utils.Alert("Error", "Error al guardar el adoptante", e.getMessage(), Alert.AlertType.ERROR, null);
         } catch (SQLException e) {
             e.printStackTrace();
-            Utils.Alert("Error", "Error al guardar el adoptante", "Ocurrió un error al guardar en la base de datos.", Alert.AlertType.ERROR);
+            Utils.Alert("Error", "Error al guardar el adoptante", "Ocurrió un error al guardar en la base de datos.", Alert.AlertType.ERROR, null);
         }
     }
 
@@ -142,7 +142,7 @@ public class ModuloAdoptantesController extends Controller implements Initializa
             tablaAdoptantes.getItems().clear();
             tablaAdoptantes.getItems().addAll(adoptantes);
         } catch (SQLException e) {
-            Utils.Alert("Error", "Error al cargar los adoptantes", e.getMessage(), Alert.AlertType.ERROR);
+            Utils.Alert("Error", "Error al cargar los adoptantes", e.getMessage(), Alert.AlertType.ERROR, null);
             e.printStackTrace();
         }
     }

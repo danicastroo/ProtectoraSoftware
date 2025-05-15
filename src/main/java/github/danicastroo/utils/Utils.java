@@ -29,16 +29,20 @@ public class Utils {
         return result;  // Se devuelve el resultado del hash en formato hexadecimal
     }
 
-    public static Alert Alert(String title, String header, String text, Alert.AlertType type) {
+    public static Alert Alert(String title, String header, String text, Alert.AlertType type, Stage stage) {
         Alert alertDialog = new Alert(type);
         alertDialog.setTitle(title);
         alertDialog.setHeaderText(header);
         alertDialog.setContentText(text);
 
         // Asociar el cuadro de diálogo al Stage principal
-        if (App.stage != null) {
+        if (stage != null) {
+            alertDialog.initOwner(stage);
+        } else if (App.stage != null) {
             alertDialog.initOwner(App.stage);
         }
+
+
 
         // Mostrar el cuadro de diálogo sin bloquear
         alertDialog.show();

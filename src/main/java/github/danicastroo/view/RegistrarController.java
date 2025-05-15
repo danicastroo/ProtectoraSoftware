@@ -70,24 +70,24 @@ public class RegistrarController extends Controller implements Initializable {
 
         // Validar el campo "Nombre"
         if (nombre.isEmpty()) {
-            Utils.Alert("Error", "El campo de nombre está vacío", "El nombre es obligatorio. Por favor, complételo.", Alert.AlertType.ERROR);
+            Utils.Alert("Error", "El campo de nombre está vacío", "El nombre es obligatorio. Por favor, complételo.", Alert.AlertType.ERROR, null);
             isValid = false;
         }
 
         // Validar el campo "Correo"
         if (isValid && email.isEmpty()) {
-            Utils.Alert("Error", "El campo correo está vacío", "El correo es obligatorio. Por favor, complételo.", Alert.AlertType.ERROR);
+            Utils.Alert("Error", "El campo correo está vacío", "El correo es obligatorio. Por favor, complételo.", Alert.AlertType.ERROR, null);
             isValid = false;
         }
 
         if (isValid && !Utils.EmailValidator.isValid(email)) {
-            Utils.Alert("Correo inválido", "El correo ingresado no es válido.", "Por favor, introduce un correo válido.", Alert.AlertType.ERROR);
+            Utils.Alert("Correo inválido", "El correo ingresado no es válido.", "Por favor, introduce un correo válido.", Alert.AlertType.ERROR, null);
             isValid = false;
         }
 
         // Validar el campo "Contraseña"
         if (isValid && password.isEmpty()) {
-            Utils.Alert("Error", "El campo contraseña está vacío", "La contraseña es obligatoria. Por favor, complétela.", Alert.AlertType.ERROR);
+            Utils.Alert("Error", "El campo contraseña está vacío", "La contraseña es obligatoria. Por favor, complétela.", Alert.AlertType.ERROR, null);
             isValid = false;
         }
 
@@ -95,12 +95,12 @@ public class RegistrarController extends Controller implements Initializable {
             try {
                 // Comprobar si el nombre ya existe
                 if (userDAO.findByUsername(nombre) != null) {
-                    Utils.Alert("Error", "Nombre Existente", "El nombre ya está en uso. Por favor, elige otro.", Alert.AlertType.ERROR);
+                    Utils.Alert("Error", "Nombre Existente", "El nombre ya está en uso. Por favor, elige otro.", Alert.AlertType.ERROR, null);
                     isValid = false;
                 }
 
                 if (isValid && userDAO.isEmailRegistered(email)) {
-                    Utils.Alert("Error", "Correo ya registrado", "El correo electrónico ya está en uso. Por favor, usa otro.", Alert.AlertType.ERROR);
+                    Utils.Alert("Error", "Correo ya registrado", "El correo electrónico ya está en uso. Por favor, usa otro.", Alert.AlertType.ERROR, null);
                     isValid = false;
                 }
 
@@ -113,10 +113,10 @@ public class RegistrarController extends Controller implements Initializable {
                     userDAO.save(trabajador);
 
                     // Notificar registro exitoso
-                    Utils.Alert("Registro Exitoso", "Usuario Registrado", "El usuario se ha registrado correctamente.", Alert.AlertType.INFORMATION);
+                    Utils.Alert("Registro Exitoso", "Usuario Registrado", "El usuario se ha registrado correctamente.", Alert.AlertType.INFORMATION, null);
                 }
             } catch (SQLException e) {
-                Utils.Alert("Error", "Error de base de datos", "No se pudo registrar al usuario: " + e.getMessage(), Alert.AlertType.ERROR);
+                Utils.Alert("Error", "Error de base de datos", "No se pudo registrar al usuario: " + e.getMessage(), Alert.AlertType.ERROR, null);
                 e.printStackTrace();
             }
         }
