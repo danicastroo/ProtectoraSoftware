@@ -1,7 +1,10 @@
 package github.danicastroo.model.dao;
 
+import github.danicastroo.model.entity.Animal;
 import github.danicastroo.model.entity.Cuida;
 import github.danicastroo.model.connection.ConnectionDB;
+import github.danicastroo.model.entity.EstadoAnimal;
+import github.danicastroo.model.entity.TipoAnimal;
 import github.danicastroo.model.interfaces.DAO;
 
 import java.io.IOException;
@@ -87,6 +90,32 @@ public class CuidaDAO implements DAO<Cuida> {
                 rs.getString("observaciones"),
                 rs.getString("tipo")
         );
+    }
+
+    public List<Integer> findAnimalIdsByTrabajadorId(int idTrabajador) throws SQLException {
+        List<Integer> idsAnimales = new ArrayList<>();
+        String query = "SELECT idAnimal FROM cuida WHERE idTrabajador = ?";
+        try (Connection conn = ConnectionDB.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, idTrabajador);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                idsAnimales.add(rs.getInt("idAnimal"));
+            }
+        }
+        return idsAnimales;
+    }
+
+    private Animal mapResultSetToAnimal(ResultSet rs) throws SQLException {
+        Animal animal = new Animal();
+        animal.setIdAnimal(rs.getInt("idAnimal"));
+        animal.setNombre(rs.getString("nombre"));
+        animal.setChip(rs.getString("chip"));
+        animal.setEdad(rs.getInt("edad"));
+        animal.setTipo(TipoAnimal.valueOf(rs.getString("tipo").toUpperCase()));
+        animal.setFechaAdopcion(rs.getDate("fechaAdopcion") != null ? rs.getDate("fechaAdopcion").toLocalDate() : null);
+        animal.setEstado(EstadoAnimal.fromString(rs.getString("estado")));
+        return animal;
     }
 
     @Override

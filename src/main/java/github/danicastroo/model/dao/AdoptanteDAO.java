@@ -15,7 +15,8 @@ public class AdoptanteDAO implements InterfaceAdoptanteDAO<Adoptante> {
     private final static String UPDATE = "UPDATE adoptante SET nombre = ?, telefono = ?, email = ?, direccion = ?, idAnimal = ?, observaciones = ? WHERE idAdoptante = ?";    private final static String DELETE = "DELETE FROM adoptante WHERE idAdoptante = ?";
     private final static String FINDBYID = "SELECT * FROM adoptante WHERE idAdoptante = ?";
     private final static String FINDBYANIMALID = "SELECT * FROM adoptante WHERE idAnimal = ?";
-    private final static String FINDALL = "SELECT * FROM adoptante";
+    private final static String FINDALL = "SELECT a.*, p.email FROM adoptante a " +
+            "JOIN persona p ON a.idPersona = p.idPersona";
 
     private Connection conn;
 
@@ -33,28 +34,61 @@ public class AdoptanteDAO implements InterfaceAdoptanteDAO<Adoptante> {
 
     @Override
     public Adoptante save(Adoptante adoptante) throws SQLException {
-        String insertAdoptanteSQL = "INSERT INTO adoptante (nombre, telefono, direccion, idPersona, idAnimal, observaciones) VALUES (?, ?, ?, ?, ?, ?)";
+        String checkEmailSQL = "SELECT COUNT(*) FROM persona WHERE email = ?";
+        String insertPersonaSQL = "INSERT INTO persona (nombre, email) VALUES (?, ?)";
+        String insertAdoptanteSQL = "INSERT INTO adoptante (telefono, direccion, idPersona, idAnimal, observaciones, nombre) VALUES (?, ?, ?, ?, ?, ?)";
 
-        try (Connection conn = ConnectionDB.getConnection();
-             PreparedStatement adoptanteStmt = conn.prepareStatement(insertAdoptanteSQL, PreparedStatement.RETURN_GENERATED_KEYS)) {
+        try (Connection conn = ConnectionDB.getConnection()) {
+            conn.setAutoCommit(false); // Inicia una transacción
 
-            // Insertar en adoptante
-            adoptanteStmt.setString(1, adoptante.getNombre());
-            adoptanteStmt.setString(2, adoptante.getTelefono());
-            adoptanteStmt.setString(3, adoptante.getDireccion());
-            adoptanteStmt.setInt(4, adoptante.getIdAdoptante()); // idPersona
-            adoptanteStmt.setInt(5, adoptante.getIdAnimal());
-            adoptanteStmt.setString(6, adoptante.getObservaciones());
-            adoptanteStmt.executeUpdate();
-
-            ResultSet rs = adoptanteStmt.getGeneratedKeys();
-            if (rs.next()) {
-                adoptante.setIdAdoptante(rs.getInt(1));
+            // Verificar si el correo ya existe
+            try (PreparedStatement checkStmt = conn.prepareStatement(checkEmailSQL)) {
+                checkStmt.setString(1, adoptante.getEmail());
+                ResultSet rs = checkStmt.executeQuery();
+                if (rs.next() && rs.getInt(1) > 0) {
+                    throw new SQLException("El correo electrónico ya está registrado: " + adoptante.getEmail());
+                }
             }
+
+            // Inserta en persona
+            int idPersona;
+            try (PreparedStatement personaStmt = conn.prepareStatement(insertPersonaSQL, Statement.RETURN_GENERATED_KEYS)) {
+                personaStmt.setString(1, adoptante.getNombre());
+                personaStmt.setString(2, adoptante.getEmail());
+                personaStmt.executeUpdate();
+
+                ResultSet rs = personaStmt.getGeneratedKeys();
+                if (rs.next()) {
+                    idPersona = rs.getInt(1); // Obtiene el ID generado
+                } else {
+                    throw new SQLException("No se pudo obtener el ID generado para la persona.");
+                }
+            }
+
+            // Inserta en adoptante
+            try (PreparedStatement adoptanteStmt = conn.prepareStatement(insertAdoptanteSQL, Statement.RETURN_GENERATED_KEYS)) {
+                adoptanteStmt.setString(1, adoptante.getTelefono());
+                adoptanteStmt.setString(2, adoptante.getDireccion());
+                adoptanteStmt.setInt(3, idPersona);
+                adoptanteStmt.setInt(4, adoptante.getIdAnimal());
+                adoptanteStmt.setString(5, adoptante.getObservaciones());
+                adoptanteStmt.setString(6, adoptante.getNombre());
+                adoptanteStmt.executeUpdate();
+
+                ResultSet rs = adoptanteStmt.getGeneratedKeys();
+                if (rs.next()) {
+                    adoptante.setIdAdoptante(rs.getInt(1)); // Asigna el ID generado
+                }
+            }
+
+            conn.commit(); // Confirma la transacción
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw e;
         }
+
         return adoptante;
     }
-
 
 
     @Override
@@ -106,7 +140,7 @@ public class AdoptanteDAO implements InterfaceAdoptanteDAO<Adoptante> {
         adoptante.setIdAdoptante(rs.getInt("idAdoptante"));
         adoptante.setNombre(rs.getString("nombre"));
         adoptante.setTelefono(rs.getString("telefono"));
-        adoptante.setEmail(rs.getString("email"));
+        adoptante.setEmail(rs.getString("email")); // Ahora se obtiene del JOIN con persona
         adoptante.setDireccion(rs.getString("direccion"));
         adoptante.setIdAnimal(rs.getInt("idAnimal"));
         adoptante.setObservaciones(rs.getString("observaciones"));

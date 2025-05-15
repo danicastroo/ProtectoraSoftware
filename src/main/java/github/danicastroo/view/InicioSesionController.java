@@ -122,6 +122,7 @@ public class InicioSesionController extends Controller implements Initializable 
                 if (trabajador != null) {
                     UserSession.login(trabajador); // Guarda el trabajador autenticado en la sesión
                     Utils.ShowAlert("Inicio de sesión exitoso. Bienvenido, " + trabajador.getNombre());
+                    System.out.println("Inicio de sesión exitoso. Usuario: " + trabajador.getNombre());
                     cambiarUsuario();
                 } else {
                     UserSession.logout();

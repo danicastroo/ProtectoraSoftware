@@ -76,25 +76,25 @@ public class PantallaMainController extends Controller implements Initializable 
      * Método para cerrar sesión y terminar el programa.
      */
     public void cerrarSesion() {
-        boolean confirmar = mostrarConfirmacion(); // Implementa esta función si es necesaria
+        boolean confirmar = mostrarConfirmacion();
 
         if (confirmar) {
-            // Salir de la aplicación
             Platform.exit();
-            System.exit(0); // Asegura que el programa termina de manera forzada
+            System.exit(0);
+            System.out.println("CasTrack cerrando sesión con usuario: " + UserSession.getUser().getNombre());
         }
     }
 
     private void cargarVista(Scenes scene) {
         try {
             URL fxmlLocation = getClass().getResource(scene.getUrl());
-            System.out.println("Ruta FXML: " + fxmlLocation); // Depuración
+            System.out.println(" >> PANTALLA ABIERTA: " + fxmlLocation);
             if (fxmlLocation == null) {
                 throw new IOException("No se pudo encontrar el archivo FXML: " + scene.getUrl());
             }
             FXMLLoader loader = new FXMLLoader(fxmlLocation);
             Parent root = loader.load(); // Carga el FXML como un Parent
-            stackPane.getChildren().setAll(root); // Asegúrate de que sea un único nodo
+            stackPane.getChildren().setAll(root);
         } catch (IOException e) {
             e.printStackTrace();
         }

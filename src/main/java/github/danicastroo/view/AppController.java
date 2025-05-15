@@ -113,7 +113,6 @@ public class AppController extends Controller implements Initializable {
      */
     public static View loadFXML(Scenes scene )throws IOException{
         String url = scene.getUrl();
-        System.out.println(url);
         FXMLLoader loader = new FXMLLoader(App.class.getResource(url));
         Parent p = loader.load();
         Controller c = loader.getController();

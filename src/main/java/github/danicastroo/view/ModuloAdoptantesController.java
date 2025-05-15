@@ -1,22 +1,24 @@
 package github.danicastroo.view;
 
+import github.danicastroo.model.connection.ConnectionDB;
+import github.danicastroo.model.dao.AdoptaDAO;
 import github.danicastroo.model.dao.AdoptanteDAO;
 import github.danicastroo.model.dao.AnimalDAO;
+import github.danicastroo.model.dao.CuidaDAO;
 import github.danicastroo.model.entity.Adopta;
 import github.danicastroo.model.entity.Adoptante;
 import github.danicastroo.model.entity.Animal;
 import github.danicastroo.model.entity.EstadoAnimal;
+import github.danicastroo.model.interfaces.InterfaceAdoptaDAO;
 import github.danicastroo.model.singleton.UserSession;
 import github.danicastroo.utils.Utils;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,35 +34,48 @@ public class ModuloAdoptantesController extends Controller implements Initializa
     @FXML
     private Button guardarAdoptanteButton;
 
+    @FXML
+    private TableView <Adoptante> tablaAdoptantes;
+
+    @FXML
+    private TableColumn<Adoptante, String> colNombre, colTelefono, colEmail, colDireccion, colAnimal;
+
     private final AnimalDAO animalDAO = new AnimalDAO();
     private final AdoptanteDAO adoptanteDAO = new AdoptanteDAO();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        configurarTabla();
+        cargarAnimalesAdoptados();
         cargarAnimalesAdoptados();
         guardarAdoptanteButton.setOnAction(event -> guardarAdoptante());
     }
 
+    private void configurarTabla() {
+        colNombre.setCellValueFactory(data -> new javafx.beans.property.SimpleStringProperty(data.getValue().getNombre()));
+        colTelefono.setCellValueFactory(data -> new javafx.beans.property.SimpleStringProperty(data.getValue().getTelefono()));
+        colEmail.setCellValueFactory(data -> new javafx.beans.property.SimpleStringProperty(data.getValue().getEmail()));
+        colDireccion.setCellValueFactory(data -> new javafx.beans.property.SimpleStringProperty(data.getValue().getDireccion()));
+        colAnimal.setCellValueFactory(data -> new javafx.beans.property.SimpleStringProperty(
+                data.getValue().getIdAnimal() > 0 ? obtenerNombreAnimal(data.getValue().getIdAnimal()) : "N/A"));
+    }
+
     private void cargarAnimalesAdoptados() {
         try {
-            // Obtener el usuario conectado
-            int idTrabajador = UserSession.getUser().getIdTrabajador();
+            int idTrabajador = UserSession.getUser().getIdTrabajador(); // Obtén el ID del usuario actual
+            List<Animal> animales = new ArrayList<>();
 
-            // Filtrar los animales adoptados asignados al usuario conectado
-            List<Animal> animalesAdoptados = new ArrayList<>();
-            for (Animal animal : animalDAO.findAll()) {
-                if (animal.getEstado() == EstadoAnimal.ADOPTADO) {
-                    animalesAdoptados.add(animal);
+            // Obtener los IDs de los animales relacionados con el trabajador actual
+            List<Integer> idsAnimalesRelacionados = new CuidaDAO().findAnimalIdsByTrabajadorId(idTrabajador);
+            for (int idAnimal : idsAnimalesRelacionados) {
+                Animal animal = animalDAO.findById(idAnimal);
+                if (animal != null && animal.getEstado() == EstadoAnimal.ADOPTADO) {
+                    animales.add(animal);
                 }
             }
 
-            // Actualizar el ComboBox
             animalesComboBox.getItems().clear();
-            if (animalesAdoptados.isEmpty()) {
-                Utils.Alert("Información", "No hay animales adoptados disponibles para este usuario", "Por favor, verifica los datos.", Alert.AlertType.INFORMATION);
-            } else {
-                animalesComboBox.getItems().addAll(animalesAdoptados);
-            }
+            animalesComboBox.getItems().addAll(animales);
         } catch (Exception e) {
             Utils.Alert("Error", "Error al cargar los animales adoptados", e.getMessage(), Alert.AlertType.ERROR);
             e.printStackTrace();
@@ -69,12 +84,14 @@ public class ModuloAdoptantesController extends Controller implements Initializa
 
     @FXML
     private void guardarAdoptante() {
-        try {
+        try (Connection conn = ConnectionDB.getConnection()) {
+            conn.setAutoCommit(false); // Inicia la transacción
+
             // Validar campos obligatorios
             String nombre = nombreField.getText().trim();
             String telefono = telefonoField.getText().trim();
             String email = emailField.getText().trim();
-            String direccion = direccionField.getText().trim(); // Obtener dirección
+            String direccion = direccionField.getText().trim();
             String observaciones = observacionesField.getText().trim();
             Animal animalSeleccionado = animalesComboBox.getValue();
 
@@ -87,14 +104,25 @@ public class ModuloAdoptantesController extends Controller implements Initializa
                 throw new IllegalArgumentException("El formato del correo electrónico no es válido.");
             }
 
+            // Verificar estado del animal
+            if (!animalSeleccionado.getEstado().name().equalsIgnoreCase("ADOPTADO")) {
+                throw new IllegalArgumentException("El animal seleccionado no está disponible para adopción.");
+            }
+
             // Crear y guardar el adoptante
             Adoptante adoptante = new Adoptante(0, nombre, telefono, email, direccion, animalSeleccionado.getIdAnimal(), observaciones);
             adoptanteDAO.save(adoptante);
 
-            Utils.Alert("Éxito", "Adoptante guardado", "El adoptante ha sido asignado correctamente.", Alert.AlertType.INFORMATION);
+            // Crear y guardar la adopción
+            Adopta adopta = new Adopta(0, adoptante.getIdAdoptante(), animalSeleccionado.getIdAnimal(), java.time.LocalDate.now(), observaciones);
+            new AdoptaDAO().save(adopta);
 
-            // Limpiar los campos después de guardar
+            conn.commit(); // Confirma la transacción
+
+            Utils.Alert("Éxito", "Adoptante guardado", "El adoptante y la adopción han sido registrados correctamente.", Alert.AlertType.INFORMATION);
+
             limpiarCampos();
+            cargarAdoptantes(); // Actualiza la tabla
         } catch (IllegalArgumentException e) {
             Utils.Alert("Error", "Error al guardar el adoptante", e.getMessage(), Alert.AlertType.ERROR);
         } catch (SQLException e) {
@@ -103,57 +131,28 @@ public class ModuloAdoptantesController extends Controller implements Initializa
         }
     }
 
-    private void asociarAdoptanteConAnimal() {
+    private String obtenerNombreAnimal(int idAnimal) {
+        Animal animal = animalDAO.findById(idAnimal);
+        return animal != null ? animal.getNombre() : "Desconocido";
+    }
+
+    private void cargarAdoptantes() {
         try {
-            // Validar que los campos no estén vacíos
-            if (animalesComboBox.getValue() == null || nombreField.getText().isEmpty() ||
-                    telefonoField.getText().isEmpty() || emailField.getText().isEmpty() ||
-                    direccionField.getText().isEmpty()) {
-                throw new IllegalArgumentException("Todos los campos son obligatorios.");
-            }
-
-            // Validar el formato del email
-            if (!Utils.EmailValidator.isValid(emailField.getText())) {
-                throw new IllegalArgumentException("El correo electrónico no es válido.");
-            }
-
-            // Obtener el animal seleccionado
-            Animal animal = animalesComboBox.getValue();
-            if (animal.getEstado() != EstadoAnimal.ADOPTADO) {
-                throw new IllegalArgumentException("El animal seleccionado no está adoptado.");
-            }
-
-            // Crear el objeto Adoptante
-            Adoptante adoptante = new Adoptante();
-            adoptante.setNombre(nombreField.getText());
-            adoptante.setTelefono(telefonoField.getText());
-            adoptante.setEmail(emailField.getText());
-            adoptante.setDireccion(direccionField.getText());
-            adoptante.setIdAnimal(animal.getIdAnimal());
-            adoptante.setObservaciones(observacionesField.getText());
-
-            // Guardar el adoptante en la base de datos
-            AdoptanteDAO adoptanteDAO = new AdoptanteDAO();
-            adoptanteDAO.save(adoptante);
-
-            // Mostrar mensaje de éxito
-            Utils.ShowAlert("Adoptante asociado correctamente al animal.");
-
-            // Limpiar los campos
-            limpiarCampos();
-        } catch (IllegalArgumentException e) {
-            Utils.Alert("Advertencia", "Datos inválidos", e.getMessage(), Alert.AlertType.WARNING);
+            List<Adoptante> adoptantes = adoptanteDAO.findAll();
+            tablaAdoptantes.getItems().clear();
+            tablaAdoptantes.getItems().addAll(adoptantes);
         } catch (SQLException e) {
+            Utils.Alert("Error", "Error al cargar los adoptantes", e.getMessage(), Alert.AlertType.ERROR);
             e.printStackTrace();
-            Utils.Alert("Error", "Error al guardar el adoptante", "Ocurrió un error al guardar en la base de datos.", Alert.AlertType.ERROR);
         }
     }
+
 
     private void limpiarCampos() {
         nombreField.clear();
         telefonoField.clear();
         emailField.clear();
-        direccionField.clear(); // Limpiar dirección
+        direccionField.clear();
         observacionesField.clear();
         animalesComboBox.setValue(null);
     }

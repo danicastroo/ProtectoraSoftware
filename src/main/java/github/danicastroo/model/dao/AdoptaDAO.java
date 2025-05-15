@@ -2,15 +2,13 @@ package github.danicastroo.model.dao;
 
 import github.danicastroo.model.connection.ConnectionDB;
 import github.danicastroo.model.entity.Adopta;
-import github.danicastroo.model.interfaces.AdoptaDAO;
-import github.danicastroo.model.interfaces.DAO;
+import github.danicastroo.model.interfaces.InterfaceAdoptaDAO;
 
-import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AdotaDAO implements AdoptaDAO {
+public class AdoptaDAO implements InterfaceAdoptaDAO {
 
 
     @Override
@@ -21,14 +19,14 @@ public class AdotaDAO implements AdoptaDAO {
 
             stmt.setInt(1, adopta.getIdAdoptante());
             stmt.setInt(2, adopta.getIdAnimal());
-            stmt.setDate(3, adopta.getFechaAdopcion() != null ? Date.valueOf(adopta.getFechaAdopcion()) : null);
+            stmt.setDate(3, Date.valueOf(adopta.getFechaAdopcion()));
             stmt.setString(4, adopta.getObservaciones());
 
             stmt.executeUpdate();
 
             ResultSet rs = stmt.getGeneratedKeys();
             if (rs.next()) {
-                adopta.setIdAdopta(rs.getInt(1));
+                adopta.setIdAdopta(rs.getInt(1)); // Asigna el ID generado
             }
         }
         return adopta;
@@ -86,6 +84,26 @@ public class AdotaDAO implements AdoptaDAO {
         adopta.setFechaAdopcion(rs.getDate("fechaAdopcion") != null ? rs.getDate("fechaAdopcion").toLocalDate() : null);
         adopta.setObservaciones(rs.getString("observaciones"));
         return adopta;
+    }
+
+    public List<Adopta> findByAdoptanteId(int idAdoptante) throws SQLException {
+        List<Adopta> adopciones = new ArrayList<>();
+        String query = "SELECT * FROM adopta WHERE idAdoptante = ?";
+        try (Connection conn = ConnectionDB.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, idAdoptante);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                Adopta adopcion = new Adopta();
+                adopcion.setIdAdopta(rs.getInt("idAdopta"));
+                adopcion.setIdAdoptante(rs.getInt("idAdoptante"));
+                adopcion.setIdAnimal(rs.getInt("idAnimal"));
+                adopcion.setFechaAdopcion(rs.getDate("fechaAdopcion").toLocalDate());
+                adopcion.setObservaciones(rs.getString("observaciones"));
+                adopciones.add(adopcion);
+            }
+        }
+        return adopciones;
     }
 }
 
