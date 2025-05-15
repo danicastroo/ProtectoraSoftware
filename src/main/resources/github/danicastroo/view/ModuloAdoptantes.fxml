@@ -22,13 +22,13 @@
       </ImageView>
         <Label layoutX="20.0" layoutY="20.0" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #062748;" text="Gestión de Adoptantes" />
 
-        <TableView fx:id="tablaAdoptantes" layoutX="20.0" layoutY="70.0" prefHeight="400.0" prefWidth="800.0" stylesheets="@../css/style.css">
+        <TableView fx:id="tablaAdoptantes" layoutX="20.0" layoutY="70.0" prefHeight="400.0" prefWidth="800.0" styleClass="table-view">
             <columns>
-                <TableColumn fx:id="colNombre" prefWidth="142.3999900817871" text="Nombre" />
-                <TableColumn fx:id="colTelefono" prefWidth="138.3999786376953" text="Teléfono" />
-                <TableColumn fx:id="colEmail" prefWidth="194.39996337890625" text="Correo Electrónico" />
-                <TableColumn fx:id="colDireccion" prefWidth="168.0" text="Dirección" />
-                <TableColumn fx:id="colAnimal" prefWidth="132.79998779296875" text="Animal" />
+                <TableColumn fx:id="colNombre" prefWidth="124.80001449584961" text="Nombre" />
+                <TableColumn fx:id="colTelefono" prefWidth="117.59999084472656" text="Teléfono" />
+                <TableColumn fx:id="colEmail" prefWidth="207.20001220703125" text="Correo Electrónico" />
+                <TableColumn fx:id="colDireccion" prefWidth="199.20001220703125" text="Dirección" />
+                <TableColumn fx:id="colAnimal" prefWidth="149.5999755859375" text="Animal" />
             </columns>
         </TableView>
 

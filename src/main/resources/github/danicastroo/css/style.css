@@ -296,56 +296,42 @@
     -fx-background-color: #A11A1A; /* Rojo más oscuro al presionar */
 }
 
-/*====================================
-  11. TABLEVIEW
-=====================================*/
-/* Estilo general para el TableView */
+/* ============================
+   11. TABLEVIEW
+============================ */
 .table-view {
-    -fx-background-color: #f9f9f9; /* Fondo gris claro */
-    -fx-border-color: #cccccc; /* Borde gris */
-    -fx-border-width: 1px;
-    -fx-border-radius: 10px; /* Bordes redondeados */
-    -fx-background-radius: 10px;
-    -fx-padding: 10px;
-}
-
-/* Estilo para las filas */
-.table-row-cell {
-    -fx-background-color: #ffffff; /* Fondo blanco */
-    -fx-text-fill: #1a1a1a; /* Texto más oscuro */
-    -fx-border-color: transparent;
+    -fx-background-color: #ffffff;
+    -fx-border-color: #d3d3d3;
+    -fx-border-radius: 8px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.15), 8, 0, 0, 3);
+    -fx-font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     -fx-font-size: 14px;
-    -fx-padding: 5px;
+    -fx-text-fill: #333;
 }
 
-.table-row-cell:hover {
-    -fx-background-color: #f0f0f0; /* Fondo gris más claro al pasar el ratón */
-}
-
-.table-row-cell:focused {
-    -fx-background-color: #e6e6e6; /* Fondo gris al seleccionar */
-}
-
-/* Estilo para las celdas */
-.table-cell {
-    -fx-text-fill: #1a1a1a; /* Texto más oscuro */
-    -fx-font-size: 14px;
-    -fx-padding: 5px;
-    -fx-alignment: center-left;
-}
-
-/* Estilo para el encabezado */
 .table-view .column-header {
-    -fx-background-color: #eaeaea; /* Fondo gris claro */
-    -fx-text-fill: #1a1a1a; /* Texto más oscuro */
-    -fx-font-size: 14px;
-    -fx-font-weight: normal;
-    -fx-border-color: #cccccc; /* Borde gris */
-    -fx-border-width: 0 0 1px 0;
+    -fx-background-color: linear-gradient(to bottom, #062748, #08335c);
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-alignment: center;
     -fx-padding: 8px;
-    -fx-border-radius: 10px 10px 0 0; /* Bordes redondeados en la parte superior */
 }
 
-.table-view .column-header:hover {
-    -fx-background-color: #dcdcdc; /* Fondo gris más oscuro al pasar el ratón */
+.table-view .table-row-cell {
+    -fx-background-color: #ffffff;
+}
+
+.table-view .table-row-cell:hover {
+    -fx-background-color: #cce5ff;
+}
+
+.table-view .cell {
+    -fx-padding: 10px;
+    -fx-text-fill: #333;
+    -fx-font-size: 14px;
+}
+
+.table-view .table-row-cell:filled:selected, .table-view .cell:filled:selected {
+    -fx-background-color: #4f6f90;
+    -fx-text-fill: white;
 }

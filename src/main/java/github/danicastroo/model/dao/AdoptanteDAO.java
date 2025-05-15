@@ -16,7 +16,8 @@ public class AdoptanteDAO implements InterfaceAdoptanteDAO<Adoptante> {
     private final static String FINDBYID = "SELECT * FROM adoptante WHERE idAdoptante = ?";
     private final static String FINDBYANIMALID = "SELECT * FROM adoptante WHERE idAnimal = ?";
     private final static String FINDALL = "SELECT a.*, p.email FROM adoptante a " +
-            "JOIN persona p ON a.idPersona = p.idPersona";
+            "JOIN persona p ON a.idPersona = p.idPersona " +
+            "WHERE a.idAdoptante IS NOT NULL";
 
     private Connection conn;
 

@@ -12,6 +12,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
@@ -100,8 +101,8 @@ public class ModuloAnimalesController extends Controller implements Initializabl
                 cuidaDAO.save(cuida);
 
                 // Mostrar mensaje de éxito
-                Alert alert = new Alert(Alert.AlertType.INFORMATION, "Animal y datos de cuidado guardados correctamente.");
-                alert.showAndWait();
+                Utils.Alert("Aviso", "Animal y datos de cuidado guardados correctamente.", "Los datos se han guardado correctamente.", Alert.AlertType.INFORMATION, (Stage) listaAnimales.getScene().getWindow());
+
 
                 cargarAnimales();
             } catch (Exception e) {
@@ -109,14 +110,12 @@ public class ModuloAnimalesController extends Controller implements Initializabl
                 throw new RuntimeException("Error al guardar el animal y los datos de cuidado.");
             }
         } catch (IllegalArgumentException e) {
-            // Mostrar mensaje de error al usuario
-            Alert alert = new Alert(Alert.AlertType.WARNING, e.getMessage());
-            alert.showAndWait();
+            Utils.Alert("Aviso", "Ha ocurrido un problema.", e.getMessage(), Alert.AlertType.WARNING, (Stage) listaAnimales.getScene().getWindow());
+
         } catch (Exception e) {
             // Manejar otros errores inesperados
             e.printStackTrace();
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Error al guardar el animal y los datos de cuidado.");
-            alert.showAndWait();
+            Utils.Alert("Error", "Error al guardar el animal y los datos de cuidado.", e.getMessage(), Alert.AlertType.ERROR, (Stage) listaAnimales.getScene().getWindow());
         }
     }
 
@@ -175,8 +174,7 @@ public class ModuloAnimalesController extends Controller implements Initializabl
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Error al cargar los animales.");
-            alert.showAndWait();
+            Utils.Alert("Error", "Error al cargar los animales", e.getMessage(), Alert.AlertType.ERROR, (Stage) listaAnimales.getScene().getWindow());
         }
     }
 
@@ -208,33 +206,45 @@ public class ModuloAnimalesController extends Controller implements Initializabl
                             "Fecha de Adopción: " + animal.getFechaAdopcion() + "\n" +
                             "Tipo de Cuidado: " + tipoCuidado + "\n" +
                             "Observaciones: " + observaciones,
-                    Alert.AlertType.INFORMATION
+                    Alert.AlertType.INFORMATION,
+                    (Stage) listaAnimales.getScene().getWindow()
             );
         } catch (Exception e) {
             e.printStackTrace();
-            Utils.Alert("Error", "Error al obtener los detalles del animal.", e.getMessage(), Alert.AlertType.ERROR);
+            Utils.Alert("Error", "Error al obtener los detalles del animal.", e.getMessage(), Alert.AlertType.ERROR, null);
         }
     }
 
-    private void editarAnimal(Animal animal) {
-        try {
-            // Cargar los datos del animal en los campos
-            nombreField.setText(animal.getNombre());
-            edadField.setText(String.valueOf(animal.getEdad()));
-            microchipField.setText(animal.getChip());
-            tipoComboBox.setValue(animal.getTipo());
-            estadoComboBox.setValue(animal.getEstado());
-            fechaAdopcionPicker.setValue(animal.getFechaAdopcion());
+private void editarAnimal(Animal animal) {
+    try {
+        // Cargar los datos del animal en los campos
+        nombreField.setText(animal.getNombre());
+        edadField.setText(String.valueOf(animal.getEdad()));
+        microchipField.setText(animal.getChip());
+        tipoComboBox.setValue(animal.getTipo());
+        estadoComboBox.setValue(animal.getEstado());
+        fechaAdopcionPicker.setValue(animal.getFechaAdopcion());
 
-            // Cambiar la acción del botón "Guardar" para actualizar
-            guardarAnimalButton.setText("Actualizar");
-            guardarAnimalButton.setOnAction(event -> actualizarAnimal(animal));
-        } catch (Exception e) {
-            e.printStackTrace();
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Error al cargar los datos del animal para editar.");
-            alert.showAndWait();
+        // Obtener los datos de Cuida relacionados con el animal
+        CuidaDAO cuidaDAO = new CuidaDAO();
+        Cuida cuidado = cuidaDAO.findByAnimalId(animal.getIdAnimal());
+        if (cuidado != null) {
+            tipoCuidadoField.setText(cuidado.getTipo());
+            observacionesField.setText(cuidado.getObservaciones());
+        } else {
+            tipoCuidadoField.clear();
+            observacionesField.clear();
         }
+
+        // Cambiar la acción del botón "Guardar" para actualizar
+        guardarAnimalButton.setText("Actualizar");
+        guardarAnimalButton.setOnAction(event -> actualizarAnimal(animal));
+    } catch (Exception e) {
+        e.printStackTrace();
+        Alert alert = new Alert(Alert.AlertType.ERROR, "Error al cargar los datos del animal para editar.");
+        alert.showAndWait();
     }
+}
 
     private void actualizarAnimal(Animal animal) {
         try {
@@ -265,7 +275,18 @@ public class ModuloAnimalesController extends Controller implements Initializabl
 
             // Guardar los cambios en la base de datos
             AnimalDAO animalDAO = new AnimalDAO();
-            animalDAO.save(animal);
+            animalDAO.update(animal);
+
+            // Actualizar los datos de Cuida
+            CuidaDAO cuidaDAO = new CuidaDAO();
+            Cuida cuidado = cuidaDAO.findByAnimalId(animal.getIdAnimal());
+            if (cuidado != null) {
+                cuidado.setTipo(tipoCuidadoField.getText());
+                cuidado.setObservaciones(observacionesField.getText());
+                cuidaDAO.update(cuidado); // Actualizar el registro existente
+            } else {
+                throw new IllegalArgumentException("No se encontraron datos de cuidado para este animal.");
+            }
 
             // Restaurar el botón "Guardar"
             guardarAnimalButton.setText("Guardar Animal");
@@ -274,14 +295,14 @@ public class ModuloAnimalesController extends Controller implements Initializabl
             // Recargar la lista de animales
             cargarAnimales();
 
-            Alert alert = new Alert(Alert.AlertType.INFORMATION, "Animal actualizado correctamente.");
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "Animal y datos de cuidado actualizados correctamente.");
             alert.showAndWait();
         } catch (IllegalArgumentException e) {
             Alert alert = new Alert(Alert.AlertType.WARNING, e.getMessage());
             alert.showAndWait();
         } catch (Exception e) {
             e.printStackTrace();
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Error al actualizar el animal.");
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Error al actualizar el animal y los datos de cuidado.");
             alert.showAndWait();
         }
     }

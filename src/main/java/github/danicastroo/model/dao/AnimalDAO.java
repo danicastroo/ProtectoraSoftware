@@ -36,6 +36,24 @@ public class AnimalDAO implements DAO<Animal> {
         return animal;
     }
 
+    public Animal update(Animal animal) throws SQLException {
+        String query = "UPDATE animal SET nombre = ?, chip = ?, edad = ?, tipo = ?, estado = ?, fechaAdopcion = ? WHERE idAnimal = ?";
+        try (Connection conn = ConnectionDB.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setString(1, animal.getNombre());
+            stmt.setString(2, animal.getChip());
+            stmt.setInt(3, animal.getEdad());
+            stmt.setString(4, animal.getTipo().toString());
+            stmt.setString(5, animal.getEstado().toString());
+            stmt.setDate(6, animal.getFechaAdopcion() != null ? Date.valueOf(animal.getFechaAdopcion()) : null);
+            stmt.setInt(7, animal.getIdAnimal());
+
+            stmt.executeUpdate();
+        }
+        return animal;
+    }
+
     @Override
     public Animal delete(Animal animal) throws SQLException {
         String query = "DELETE FROM animal WHERE idAnimal = ?";

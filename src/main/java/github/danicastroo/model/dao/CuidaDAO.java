@@ -14,6 +14,8 @@ import java.util.List;
 
 public class CuidaDAO implements DAO<Cuida> {
 
+
+
     @Override
     public Cuida save(Cuida cuida) throws SQLException {
         String query = "INSERT INTO cuida (idTrabajador, idAnimal, observaciones, tipo) VALUES (?, ?, ?, ?)";
@@ -83,6 +85,19 @@ public class CuidaDAO implements DAO<Cuida> {
         return cuidas;
     }
 
+    public void update(Cuida cuida) throws SQLException {
+        String query = "UPDATE cuida SET observaciones = ?, tipo = ? WHERE idAnimal = ?";
+        try (Connection conn = ConnectionDB.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setString(1, cuida.getObservaciones());
+            stmt.setString(2, cuida.getTipo());
+            stmt.setInt(3, cuida.getIdAnimal());
+
+            stmt.executeUpdate();
+        }
+    }
+
     private Cuida mapResultSetToCuida(ResultSet rs) throws SQLException {
         return new Cuida(
                 rs.getInt("idAnimal"),
@@ -106,17 +121,26 @@ public class CuidaDAO implements DAO<Cuida> {
         return idsAnimales;
     }
 
-    private Animal mapResultSetToAnimal(ResultSet rs) throws SQLException {
-        Animal animal = new Animal();
-        animal.setIdAnimal(rs.getInt("idAnimal"));
-        animal.setNombre(rs.getString("nombre"));
-        animal.setChip(rs.getString("chip"));
-        animal.setEdad(rs.getInt("edad"));
-        animal.setTipo(TipoAnimal.valueOf(rs.getString("tipo").toUpperCase()));
-        animal.setFechaAdopcion(rs.getDate("fechaAdopcion") != null ? rs.getDate("fechaAdopcion").toLocalDate() : null);
-        animal.setEstado(EstadoAnimal.fromString(rs.getString("estado")));
-        return animal;
+    public Cuida findByAnimalId(int idAnimal) throws SQLException {
+        String query = "SELECT * FROM cuida WHERE idAnimal = ?";
+        try (Connection conn = ConnectionDB.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setInt(1, idAnimal);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return new Cuida(
+                        rs.getInt("idAnimal"),
+                        rs.getInt("idTrabajador"),
+                        rs.getString("observaciones"),
+                        rs.getString("tipo")
+                );
+            }
+        }
+        return null; // Retorna null si no se encuentra ningún registro
     }
+
 
     @Override
     public void close() throws IOException {

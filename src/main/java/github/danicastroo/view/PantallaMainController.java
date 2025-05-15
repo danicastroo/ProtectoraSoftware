@@ -2,6 +2,7 @@ package github.danicastroo.view;
 
 import github.danicastroo.model.entity.Trabajador;
 import github.danicastroo.model.singleton.UserSession;
+import github.danicastroo.utils.Utils;
 import javafx.animation.Interpolator;
 import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
@@ -15,6 +16,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.IOException;
@@ -105,13 +107,14 @@ public class PantallaMainController extends Controller implements Initializable 
      * @return true si el usuario confirma, false en caso contrario.
      */
     private boolean mostrarConfirmacion() {
-        Alert alerta = new Alert(Alert.AlertType.CONFIRMATION);
-        alerta.setTitle("Cerrar sesión");
-        alerta.setHeaderText("¿Seguro que deseas cerrar sesión?");
-        alerta.setContentText("Se cerrará el programa.");
+        Alert mensaje = new Alert(Alert.AlertType.CONFIRMATION);
+        mensaje.setTitle("Cerrar sesión");
+        mensaje.setHeaderText("¿Seguro que deseas cerrar sesión?");
+        mensaje.setContentText("Se cerrará el programa.");
+        mensaje.initOwner((Stage) fondo.getScene().getWindow());
 
         // Muestra el cuadro y espera la respuesta del usuario
-        ButtonType resultado = alerta.showAndWait().orElse(ButtonType.CANCEL);
+        ButtonType resultado = mensaje.showAndWait().orElse(ButtonType.CANCEL);
 
         // Retorna true si el usuario pulsa Aceptar; de lo contrario, false
         return resultado == ButtonType.OK;

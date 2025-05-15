@@ -15,6 +15,7 @@ import github.danicastroo.utils.Utils;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
@@ -58,6 +59,16 @@ public class ModuloAdoptantesController extends Controller implements Initializa
         colDireccion.setCellValueFactory(data -> new javafx.beans.property.SimpleStringProperty(data.getValue().getDireccion()));
         colAnimal.setCellValueFactory(data -> new javafx.beans.property.SimpleStringProperty(
                 data.getValue().getIdAnimal() > 0 ? obtenerNombreAnimal(data.getValue().getIdAnimal()) : "N/A"));
+
+        // Ajustar el ancho de las columnas
+        colNombre.setPrefWidth(150);
+        colTelefono.setPrefWidth(120);
+        colEmail.setPrefWidth(200);
+        colDireccion.setPrefWidth(180);
+        colAnimal.setPrefWidth(150);
+
+        // Habilitar el ajuste automático del tamaño de las columnas
+        tablaAdoptantes.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
     }
 
     private void cargarAnimalesAdoptados() {
@@ -77,7 +88,7 @@ public class ModuloAdoptantesController extends Controller implements Initializa
             animalesComboBox.getItems().clear();
             animalesComboBox.getItems().addAll(animales);
         } catch (Exception e) {
-            Utils.Alert("Error", "Error al cargar los animales adoptados", e.getMessage(), Alert.AlertType.ERROR);
+            Utils.Alert("Error", "Error al cargar los animales adoptados", e.getMessage(), Alert.AlertType.ERROR, (Stage) tablaAdoptantes.getScene().getWindow());
             e.printStackTrace();
         }
     }
@@ -119,15 +130,15 @@ public class ModuloAdoptantesController extends Controller implements Initializa
 
             conn.commit(); // Confirma la transacción
 
-            Utils.Alert("Éxito", "Adoptante guardado", "El adoptante y la adopción han sido registrados correctamente.", Alert.AlertType.INFORMATION);
+            Utils.Alert("Éxito", "Adoptante guardado", "El adoptante y la adopción han sido registrados correctamente.", Alert.AlertType.INFORMATION, (Stage) tablaAdoptantes.getScene().getWindow());
 
             limpiarCampos();
             cargarAdoptantes(); // Actualiza la tabla
         } catch (IllegalArgumentException e) {
-            Utils.Alert("Error", "Error al guardar el adoptante", e.getMessage(), Alert.AlertType.ERROR);
+            Utils.Alert("Error", "Error al guardar el adoptante", e.getMessage(), Alert.AlertType.ERROR, (Stage) tablaAdoptantes.getScene().getWindow());
         } catch (SQLException e) {
             e.printStackTrace();
-            Utils.Alert("Error", "Error al guardar el adoptante", "Ocurrió un error al guardar en la base de datos.", Alert.AlertType.ERROR);
+            Utils.Alert("Error", "Error al guardar el adoptante", "Ocurrió un error al guardar en la base de datos.", Alert.AlertType.ERROR, (Stage) tablaAdoptantes.getScene().getWindow());
         }
     }
 
@@ -142,7 +153,7 @@ public class ModuloAdoptantesController extends Controller implements Initializa
             tablaAdoptantes.getItems().clear();
             tablaAdoptantes.getItems().addAll(adoptantes);
         } catch (SQLException e) {
-            Utils.Alert("Error", "Error al cargar los adoptantes", e.getMessage(), Alert.AlertType.ERROR);
+            Utils.Alert("Error", "Error al cargar los adoptantes", e.getMessage(), Alert.AlertType.ERROR, (Stage) tablaAdoptantes.getScene().getWindow());
             e.printStackTrace();
         }
     }
