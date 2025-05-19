@@ -15,20 +15,21 @@
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1280.0" style="-fx-background-color: WHITE; -fx-padding: 20;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="github.danicastroo.view.ModuloAdoptantesController">
 
     <children>
-      <ImageView fitHeight="386.0" fitWidth="274.0" layoutX="903.0" layoutY="91.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="386.0" fitWidth="274.0" layoutX="926.0" layoutY="90.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../images/animalComboBox.jpg" />
          </image>
       </ImageView>
         <Label layoutX="20.0" layoutY="20.0" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #062748;" text="Gestión de Adoptantes" />
 
-        <TableView fx:id="tablaAdoptantes" layoutX="20.0" layoutY="70.0" prefHeight="400.0" prefWidth="800.0" styleClass="table-view">
+        <TableView fx:id="tablaAdoptantes" layoutX="20.0" layoutY="70.0" prefHeight="400.0" prefWidth="886.0" stylesheets="@../css/style.css">
             <columns>
-                <TableColumn fx:id="colNombre" prefWidth="124.80001449584961" text="Nombre" />
-                <TableColumn fx:id="colTelefono" prefWidth="117.59999084472656" text="Teléfono" />
-                <TableColumn fx:id="colEmail" prefWidth="207.20001220703125" text="Correo Electrónico" />
-                <TableColumn fx:id="colDireccion" prefWidth="199.20001220703125" text="Dirección" />
-                <TableColumn fx:id="colAnimal" prefWidth="149.5999755859375" text="Animal" />
+                <TableColumn fx:id="colNombre" prefWidth="84.00003051757812" text="Nombre" />
+                <TableColumn fx:id="colTelefono" prefWidth="90.39999389648438" text="Teléfono" />
+                <TableColumn fx:id="colEmail" prefWidth="162.39996337890625" text="Correo Electrónico" />
+                <TableColumn fx:id="colDireccion" prefWidth="99.20001220703125" text="Dirección" />
+                <TableColumn fx:id="colAnimal" prefWidth="212.79998779296875" text="Animal" />
+                <TableColumn fx:id="colObservaciones" prefWidth="356.79998779296875" text="Observaciones" />
             </columns>
         </TableView>
 
@@ -42,14 +43,14 @@
                <Cursor fx:constant="HAND" />
             </cursor></Button>
         </HBox>
-         <Label layoutX="903.0" layoutY="56.0" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #062748;" text="Registrar Adoptante" />
-         <ComboBox fx:id="animalesComboBox" layoutX="938.0" layoutY="111.0" prefHeight="26.0" prefWidth="222.0" promptText="Selecciona un animal adoptado" />
-         <TextField fx:id="nombreField" layoutX="938.0" layoutY="161.0" prefHeight="26.0" prefWidth="222.0" />
-         <TextField fx:id="telefonoField" layoutX="938.0" layoutY="213.0" prefHeight="26.0" prefWidth="222.0" />
-         <TextField fx:id="emailField" layoutX="938.0" layoutY="266.0" prefHeight="26.0" prefWidth="222.0" />
-         <TextField fx:id="direccionField" layoutX="938.0" layoutY="319.0" prefHeight="26.0" prefWidth="222.0" />
-         <TextField fx:id="observacionesField" layoutX="935.0" layoutY="374.0" prefHeight="91.0" prefWidth="228.0" />
-         <Button fx:id="guardarAdoptanteButton" layoutX="896.0" layoutY="502.0" stylesheets="@../css/style.css" text="Guardar Adoptante">
+         <Label layoutX="926.0" layoutY="55.0" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #062748;" text="Registrar Adoptante" />
+         <ComboBox fx:id="animalesComboBox" layoutX="961.0" layoutY="110.0" prefHeight="26.0" prefWidth="222.0" promptText="Selecciona un animal adoptado" />
+         <TextField fx:id="nombreField" layoutX="961.0" layoutY="160.0" prefHeight="26.0" prefWidth="222.0" />
+         <TextField fx:id="telefonoField" layoutX="961.0" layoutY="212.0" prefHeight="26.0" prefWidth="222.0" />
+         <TextField fx:id="emailField" layoutX="961.0" layoutY="265.0" prefHeight="26.0" prefWidth="222.0" />
+         <TextField fx:id="direccionField" layoutX="961.0" layoutY="318.0" prefHeight="26.0" prefWidth="222.0" />
+         <TextField fx:id="observacionesField" layoutX="958.0" layoutY="373.0" prefHeight="91.0" prefWidth="228.0" />
+         <Button fx:id="guardarAdoptanteButton" layoutX="919.0" layoutY="501.0" stylesheets="@../css/style.css" text="Guardar Adoptante">
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor></Button>

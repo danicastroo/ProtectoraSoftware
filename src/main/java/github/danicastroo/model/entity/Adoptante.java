@@ -1,6 +1,7 @@
 package github.danicastroo.model.entity;
 
 public class Adoptante extends Persona {
+    private int idPersona;
     private int idAdoptante;
     private String telefono;
     private String email;
@@ -18,6 +19,10 @@ public class Adoptante extends Persona {
         this.direccion = direccion;
         this.idAnimal = idAnimal;
         this.observaciones = observaciones;
+    }
+
+    public int getIdPersona() {
+        return idPersona;
     }
 
     public String getDireccion() { return direccion; }
@@ -43,6 +48,10 @@ public class Adoptante extends Persona {
     public String getObservaciones() { return observaciones; }
 
     public void setObservaciones(String observaciones) { this.observaciones = observaciones; }
+
+    public void setIdPersona(int idPersona) {
+        this.idPersona = idPersona;
+    }
 
     @Override
     public void mostrarDatos() {

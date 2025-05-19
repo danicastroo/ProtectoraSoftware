@@ -296,42 +296,52 @@
     -fx-background-color: #A11A1A; /* Rojo más oscuro al presionar */
 }
 
-/* ============================
-   11. TABLEVIEW
-============================ */
+
+/*====================================
+  11. tabla-view
+=====================================*/
 .table-view {
-    -fx-background-color: #ffffff;
-    -fx-border-color: #d3d3d3;
-    -fx-border-radius: 8px;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.15), 8, 0, 0, 3);
-    -fx-font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    -fx-font-size: 14px;
-    -fx-text-fill: #333;
+
+    -fx-border-radius: 8px; /* Bordes redondeados */
+    -fx-font-size: 14px; /* Tamaño de fuente */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 8, 0.5, 0, 2); /* Sombra suave */
 }
 
 .table-view .column-header {
-    -fx-background-color: linear-gradient(to bottom, #062748, #08335c);
-    -fx-text-fill: white;
-    -fx-font-weight: bold;
-    -fx-alignment: center;
-    -fx-padding: 8px;
+    -fx-background-color: linear-gradient(to bottom, #062748, #0a3a5d); /* Degradado azul oscuro */
+    -fx-text-fill: black; /* Texto blanco */
+    -fx-font-weight: bold; /* Texto en negrita */
+    -fx-alignment: center; /* Centrado */
+    -fx-padding: 10px; /* Espaciado interno */
+    -fx-border-color: #ffffff; /* Borde blanco */
+    -fx-border-width: 0 0 2px 0; /* Solo borde inferior */
 }
 
-.table-view .table-row-cell {
-    -fx-background-color: #ffffff;
-}
+/*.table-view .table-row-cell {
+    -fx-background-color: white; !* Fondo blanco *!
+    -fx-text-fill: black; !* Texto negro *!
+    -fx-border-color: #e0e0e0; !* Borde entre filas *!
+    -fx-border-width: 0 0 1px 0; !* Solo borde inferior *!
+    -fx-padding: 10px; !* Espaciado interno *!
+    -fx-transition: background-color 0.3s ease; !* Transición suave *!
+}*/
 
 .table-view .table-row-cell:hover {
-    -fx-background-color: #cce5ff;
+    -fx-background-color: #e6f7ff; /* Fondo azul claro al pasar el ratón */
+    -fx-cursor: hand; /* Cambia el cursor */
 }
 
-.table-view .cell {
-    -fx-padding: 10px;
-    -fx-text-fill: #333;
-    -fx-font-size: 14px;
+.table-view .table-row-cell:filled:selected {
+    -fx-background-color: #062748; /* Fondo azul oscuro */
+    -fx-text-fill: white; /* Texto blanco */
+    -fx-font-weight: bold; /* Texto en negrita */
 }
 
-.table-view .table-row-cell:filled:selected, .table-view .cell:filled:selected {
-    -fx-background-color: #4f6f90;
-    -fx-text-fill: white;
+.scroll-bar .thumb {
+    -fx-background-color: #062748; /* Color azul oscuro */
+    -fx-background-radius: 5px; /* Bordes redondeados */
+}
+
+.scroll-bar .thumb:hover {
+    -fx-background-color: #041a33; /* Azul más oscuro al pasar el ratón */
 }
