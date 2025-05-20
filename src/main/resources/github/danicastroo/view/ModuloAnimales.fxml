@@ -18,17 +18,17 @@
          </image>
       </ImageView>
       <TextField fx:id="nombreField" layoutX="930.0" layoutY="74.0" prefHeight="31.0" prefWidth="242.0" />
-      <TextField fx:id="edadField" layoutX="930.0" layoutY="141.0" prefHeight="31.0" prefWidth="150.0" />
-      <TextField fx:id="microchipField" layoutX="930.0" layoutY="211.0" prefHeight="31.0" prefWidth="150.0" />
-      <ComboBox fx:id="tipoComboBox" layoutX="930.0" layoutY="280.0" prefHeight="26.0" prefWidth="104.0">
+      <TextField fx:id="edadField" layoutX="930.0" layoutY="141.0" prefHeight="31.0" prefWidth="242.0" />
+      <TextField fx:id="microchipField" layoutX="930.0" layoutY="211.0" prefHeight="31.0" prefWidth="242.0" />
+      <ComboBox fx:id="tipoComboBox" layoutX="930.0" layoutY="280.0" prefHeight="26.0" prefWidth="242.0">
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor></ComboBox>
-      <ComboBox fx:id="estadoComboBox" layoutX="930.0" layoutY="352.0" prefHeight="26.0" prefWidth="104.0">
+      <ComboBox fx:id="estadoComboBox" layoutX="930.0" layoutY="352.0" prefHeight="26.0" prefWidth="242.0">
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor></ComboBox>
-      <DatePicker fx:id="fechaAdopcionPicker" layoutX="930.0" layoutY="423.0" />
+      <DatePicker fx:id="fechaAdopcionPicker" layoutX="930.0" layoutY="423.0" prefHeight="26.0" prefWidth="242.0" />
       <TextField fx:id="tipoCuidadoField" layoutX="930.0" layoutY="491.0" prefHeight="31.0" prefWidth="242.0" />
       <TextField fx:id="observacionesField" layoutX="930.0" layoutY="576.0" prefHeight="110.0" prefWidth="247.0" />
 
