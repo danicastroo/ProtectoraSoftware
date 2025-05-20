@@ -1,6 +1,7 @@
 package github.danicastroo;
 
 
+import github.danicastroo.utils.Utils;
 import github.danicastroo.view.AppController;
 import github.danicastroo.view.Scenes;
 import github.danicastroo.view.View;
@@ -21,6 +22,8 @@ public class App extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         View view = AppController.loadFXML(Scenes.ROOT);
+
+        Utils.configurarLogger();
 
         scene = new Scene(view.scene, 900, 600);
         stage.centerOnScreen(); // Centra la ventana en la pantalla

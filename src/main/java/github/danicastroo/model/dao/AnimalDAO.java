@@ -10,8 +10,11 @@ import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class AnimalDAO implements DAO<Animal> {
+
+    private static final Logger logger = Logger.getLogger(Animal.class.getName());
 
     @Override
     public Animal save(Animal animal) throws SQLException {
@@ -26,12 +29,16 @@ public class AnimalDAO implements DAO<Animal> {
             stmt.setString(5, animal.getEstado().toString());
             stmt.setDate(6, animal.getFechaAdopcion() != null ? Date.valueOf(animal.getFechaAdopcion()) : null);
 
-            stmt.executeUpdate();
+            int info = stmt.executeUpdate();
+            logger.info("AdoptaDAO.save: Filas insertadas = " + info);
+
 
             ResultSet rs = stmt.getGeneratedKeys();
             if (rs.next()) {
                 animal.setIdAnimal(rs.getInt(1));
+                logger.info("AdoptaDAO.save: ID generado");
             }
+
         }
         return animal;
     }
@@ -61,7 +68,8 @@ public class AnimalDAO implements DAO<Animal> {
              PreparedStatement stmt = conn.prepareStatement(query)) {
 
             stmt.setInt(1, animal.getIdAnimal());
-            stmt.executeUpdate();
+            int info = stmt.executeUpdate();
+            logger.info("AdoptaDAO.delete: Filas eliminadas = " + info);
         }
         return animal;
     }
@@ -76,9 +84,11 @@ public class AnimalDAO implements DAO<Animal> {
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
+                logger.info("AdoptaDAO.findById: Adopta encontrado con id = " + id);
                 return mapResultSetToAnimal(rs);
             }
         } catch (SQLException e) {
+            logger.severe("AdoptaDAO.findById: Error al buscar adopta: " + e.getMessage());
             e.printStackTrace();
         }
         return null;
@@ -95,7 +105,9 @@ public class AnimalDAO implements DAO<Animal> {
             while (rs.next()) {
                 animals.add(mapResultSetToAnimal(rs));
             }
+            logger.info("AdoptaDAO.findAll: Se encontraron " + animals.size() + " adopciones");
         } catch (SQLException e) {
+            logger.severe("AdoptaDAO.findAll: Error al buscar adopciones: " + e.getMessage());
             e.printStackTrace();
         }
         return animals;

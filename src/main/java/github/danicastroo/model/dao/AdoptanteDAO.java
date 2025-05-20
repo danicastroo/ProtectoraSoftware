@@ -8,8 +8,11 @@ import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class AdoptanteDAO implements InterfaceAdoptanteDAO<Adoptante> {
+
+    private static final Logger logger = Logger.getLogger(AdoptanteDAO.class.getName());
 
     private final static String INSERT = "INSERT INTO adoptante (idAdoptante, telefono, email, idAnimal, observaciones) VALUES (?, ?, ?, ?, ?)";
     private final static String UPDATE = "UPDATE adoptante SET nombre = ?, telefono = ?, email = ?, direccion = ?, idAnimal = ?, observaciones = ? WHERE idAdoptante = ?";
@@ -29,7 +32,7 @@ public class AdoptanteDAO implements InterfaceAdoptanteDAO<Adoptante> {
         try {
             this.conn = ConnectionDB.getConnection();
         } catch (SQLException e) {
-            System.err.println("Error al inicializar la conexión en AdoptanteDAO:");
+            logger.severe("Error al inicializar la conexión en AdoptanteDAO: " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -37,12 +40,11 @@ public class AdoptanteDAO implements InterfaceAdoptanteDAO<Adoptante> {
    @Override
     public Adoptante save(Adoptante adoptante) throws SQLException {
         if (adoptante.getIdAdoptante() > 0) {
-            // Actualizar adoptante existente
             String updatePersonaSQL = "UPDATE persona SET nombre = ?, email = ? WHERE idPersona = ?";
             String updateAdoptanteSQL = "UPDATE adoptante SET telefono = ?, direccion = ?, idAnimal = ?, observaciones = ? WHERE idAdoptante = ?";
 
             try (Connection conn = ConnectionDB.getConnection()) {
-                conn.setAutoCommit(false); // Inicia una transacción
+                conn.setAutoCommit(false);
 
                 // Actualizar en persona
                 try (PreparedStatement personaStmt = conn.prepareStatement(updatePersonaSQL)) {
@@ -59,11 +61,14 @@ public class AdoptanteDAO implements InterfaceAdoptanteDAO<Adoptante> {
                     adoptanteStmt.setInt(3, adoptante.getIdAnimal());
                     adoptanteStmt.setString(4, adoptante.getObservaciones());
                     adoptanteStmt.setInt(5, adoptante.getIdAdoptante());
-                    adoptanteStmt.executeUpdate();
+                    int info = adoptanteStmt.executeUpdate();
+                    logger.info("AdoptanteDAO.save (update): Filas actualizadas = " + info);
+
                 }
 
                 conn.commit(); // Confirma la transacción
             } catch (SQLException e) {
+                logger.severe("AdoptanteDAO.save (update): Error al actualizar en persona o adoptante: " + e.getMessage());
                 e.printStackTrace();
                 throw e;
             }
@@ -77,7 +82,8 @@ public class AdoptanteDAO implements InterfaceAdoptanteDAO<Adoptante> {
     public Adoptante delete(Adoptante adoptante) throws SQLException {
         try (PreparedStatement stmt = conn.prepareStatement(DELETE)) {
             stmt.setInt(1, adoptante.getIdAdoptante());
-            stmt.executeUpdate();
+            int info = stmt.executeUpdate();
+            logger.info("AdoptanteDAO.delete: Filas eliminadas = " + info);
         }
         return adoptante;
     }
@@ -88,17 +94,7 @@ public class AdoptanteDAO implements InterfaceAdoptanteDAO<Adoptante> {
             stmt.setInt(1, id);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
-                return mapResultSetToAdoptante(rs);
-            }
-        }
-        return null;
-    }
-
-    public Adoptante findByAnimalId(int idAnimal) throws SQLException {
-        try (PreparedStatement stmt = conn.prepareStatement(FINDBYANIMALID)) {
-            stmt.setInt(1, idAnimal);
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
+                logger.info("AdoptanteDAO.findById: Adoptante encontrado con id = " + id);
                 return mapResultSetToAdoptante(rs);
             }
         }
@@ -111,6 +107,7 @@ public class AdoptanteDAO implements InterfaceAdoptanteDAO<Adoptante> {
         try (PreparedStatement stmt = conn.prepareStatement(FINDALL);
              ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
+                logger.info("AdoptanteDAO.findAll: Adoptante encontrado");
                 adoptantes.add(mapResultSetToAdoptante(rs));
             }
         }
