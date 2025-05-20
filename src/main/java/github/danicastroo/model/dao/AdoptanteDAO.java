@@ -8,11 +8,8 @@ import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 public class AdoptanteDAO implements InterfaceAdoptanteDAO<Adoptante> {
-
-    private static final Logger logger = Logger.getLogger(AdoptanteDAO.class.getName());
 
     private final static String INSERT = "INSERT INTO adoptante (idAdoptante, telefono, email, idAnimal, observaciones) VALUES (?, ?, ?, ?, ?)";
     private final static String UPDATE = "UPDATE adoptante SET nombre = ?, telefono = ?, email = ?, direccion = ?, idAnimal = ?, observaciones = ? WHERE idAdoptante = ?";
@@ -32,16 +29,17 @@ public class AdoptanteDAO implements InterfaceAdoptanteDAO<Adoptante> {
         try {
             this.conn = ConnectionDB.getConnection();
         } catch (SQLException e) {
-            logger.severe("Error al inicializar la conexión en AdoptanteDAO: " + e.getMessage());
+            System.err.println("Error al inicializar la conexión en AdoptanteDAO:");
             e.printStackTrace();
         }
     }
 
-   @Override
+    @Override
     public Adoptante save(Adoptante adoptante) throws SQLException {
         if (adoptante.getIdAdoptante() > 0) {
+            // Actualizar adoptante existente
             String updatePersonaSQL = "UPDATE persona SET nombre = ?, email = ? WHERE idPersona = ?";
-            String updateAdoptanteSQL = "UPDATE adoptante SET telefono = ?, direccion = ?, idAnimal = ?, observaciones = ? WHERE idAdoptante = ?";
+            String updateAdoptanteSQL = "UPDATE adoptante SET nombre = ?, telefono = ?, direccion = ?, idAnimal = ?, observaciones = ? WHERE idAdoptante = ?";
 
             try (Connection conn = ConnectionDB.getConnection()) {
                 conn.setAutoCommit(false);
@@ -56,24 +54,64 @@ public class AdoptanteDAO implements InterfaceAdoptanteDAO<Adoptante> {
 
                 // Actualizar en adoptante
                 try (PreparedStatement adoptanteStmt = conn.prepareStatement(updateAdoptanteSQL)) {
-                    adoptanteStmt.setString(1, adoptante.getTelefono());
-                    adoptanteStmt.setString(2, adoptante.getDireccion());
-                    adoptanteStmt.setInt(3, adoptante.getIdAnimal());
-                    adoptanteStmt.setString(4, adoptante.getObservaciones());
-                    adoptanteStmt.setInt(5, adoptante.getIdAdoptante());
-                    int info = adoptanteStmt.executeUpdate();
-                    logger.info("AdoptanteDAO.save (update): Filas actualizadas = " + info);
-
+                    adoptanteStmt.setString(1, adoptante.getNombre());
+                    adoptanteStmt.setString(2, adoptante.getTelefono());
+                    adoptanteStmt.setString(3, adoptante.getDireccion());
+                    adoptanteStmt.setInt(4, adoptante.getIdAnimal());
+                    adoptanteStmt.setString(5, adoptante.getObservaciones());
+                    adoptanteStmt.setInt(6, adoptante.getIdAdoptante());
+                    adoptanteStmt.executeUpdate();
                 }
 
-                conn.commit(); // Confirma la transacción
+                conn.commit();
             } catch (SQLException e) {
-                logger.severe("AdoptanteDAO.save (update): Error al actualizar en persona o adoptante: " + e.getMessage());
                 e.printStackTrace();
                 throw e;
             }
         } else {
-            // Código para insertar un nuevo adoptante (ya implementado)
+            // Insertar nuevo adoptante
+            String insertPersonaSQL = "INSERT INTO persona (nombre, email) VALUES (?, ?)";
+            String insertAdoptanteSQL = "INSERT INTO adoptante (telefono, direccion, idPersona, idAnimal, observaciones, nombre) VALUES (?, ?, ?, ?, ?, ?)";
+
+            try (Connection conn = ConnectionDB.getConnection()) {
+                conn.setAutoCommit(false);
+
+                try (PreparedStatement personaStmt = conn.prepareStatement(insertPersonaSQL, PreparedStatement.RETURN_GENERATED_KEYS);
+                     PreparedStatement adoptanteStmt = conn.prepareStatement(insertAdoptanteSQL, PreparedStatement.RETURN_GENERATED_KEYS)) {
+
+                    // Insertar en persona
+                    personaStmt.setString(1, adoptante.getNombre());
+                    personaStmt.setString(2, adoptante.getEmail());
+                    personaStmt.executeUpdate();
+
+                    ResultSet rs = personaStmt.getGeneratedKeys();
+                    if (rs.next()) {
+                        int idPersona = rs.getInt(1);
+
+                        // Insertar en adoptante
+                        adoptanteStmt.setString(1, adoptante.getTelefono());
+                        adoptanteStmt.setString(2, adoptante.getDireccion());
+                        adoptanteStmt.setInt(3, idPersona);
+                        adoptanteStmt.setInt(4, adoptante.getIdAnimal());
+                        adoptanteStmt.setString(5, adoptante.getObservaciones());
+                        adoptanteStmt.setString(6, adoptante.getNombre());
+                        adoptanteStmt.executeUpdate();
+
+                        // Recuperar el idAdoptante generado
+                        ResultSet rsAdoptante = adoptanteStmt.getGeneratedKeys();
+                        if (rsAdoptante.next()) {
+                            adoptante.setIdAdoptante(rsAdoptante.getInt(1));
+                        }
+                        adoptante.setIdPersona(idPersona);
+                        conn.commit();
+                    } else {
+                        throw new SQLException("No se pudo generar el ID para la tabla 'persona'.");
+                    }
+                } catch (SQLException e) {
+                    conn.rollback();
+                    throw e;
+                }
+            }
         }
         return adoptante;
     }
@@ -82,8 +120,7 @@ public class AdoptanteDAO implements InterfaceAdoptanteDAO<Adoptante> {
     public Adoptante delete(Adoptante adoptante) throws SQLException {
         try (PreparedStatement stmt = conn.prepareStatement(DELETE)) {
             stmt.setInt(1, adoptante.getIdAdoptante());
-            int info = stmt.executeUpdate();
-            logger.info("AdoptanteDAO.delete: Filas eliminadas = " + info);
+            stmt.executeUpdate();
         }
         return adoptante;
     }
@@ -94,7 +131,17 @@ public class AdoptanteDAO implements InterfaceAdoptanteDAO<Adoptante> {
             stmt.setInt(1, id);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
-                logger.info("AdoptanteDAO.findById: Adoptante encontrado con id = " + id);
+                return mapResultSetToAdoptante(rs);
+            }
+        }
+        return null;
+    }
+
+    public Adoptante findByAnimalId(int idAnimal) throws SQLException {
+        try (PreparedStatement stmt = conn.prepareStatement(FINDBYANIMALID)) {
+            stmt.setInt(1, idAnimal);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
                 return mapResultSetToAdoptante(rs);
             }
         }
@@ -107,7 +154,6 @@ public class AdoptanteDAO implements InterfaceAdoptanteDAO<Adoptante> {
         try (PreparedStatement stmt = conn.prepareStatement(FINDALL);
              ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
-                logger.info("AdoptanteDAO.findAll: Adoptante encontrado");
                 adoptantes.add(mapResultSetToAdoptante(rs));
             }
         }

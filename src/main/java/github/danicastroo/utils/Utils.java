@@ -11,18 +11,6 @@ import java.util.Scanner;
 
 public class Utils {
 
-    public static void configurarLogger() {
-        try {
-            java.util.logging.Logger logger = java.util.logging.Logger.getLogger("");
-            java.util.logging.FileHandler fh = new java.util.logging.FileHandler("registro.log", true);
-            fh.setFormatter(new java.util.logging.SimpleFormatter());
-            logger.addHandler(fh);
-            logger.setLevel(java.util.logging.Level.ALL);
-        } catch (java.io.IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     public static String encryptSHA256(String s) {
         String result = null;
         try {

@@ -80,6 +80,8 @@ public class ModuloAdoptantesController extends Controller implements Initializa
         tablaAdoptantes.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
     }
 
+    // Dentro de ModuloAdoptantesController.java
+
     @FXML
     private void editarAdoptante() {
         Adoptante adoptanteSeleccionado = tablaAdoptantes.getSelectionModel().getSelectedItem();
@@ -98,34 +100,51 @@ public class ModuloAdoptantesController extends Controller implements Initializa
 
         // Cambiar el texto y la acción del botón "Guardar"
         guardarAdoptanteButton.setText("Actualizar Adoptante");
-        guardarAdoptanteButton.setOnAction(event -> actualizarAdoptante(adoptanteSeleccionado));
+        guardarAdoptanteButton.setOnAction(event -> {
+            actualizarAdoptante(adoptanteSeleccionado);
+            guardarAdoptanteButton.setText("Guardar Adoptante");
+            guardarAdoptanteButton.setOnAction(e -> guardarAdoptante());
+        });
     }
 
     private void actualizarAdoptante(Adoptante adoptante) {
         try {
-            // Actualizar los datos del adoptante
-            adoptante.setNombre(nombreField.getText().trim());
-            adoptante.setTelefono(telefonoField.getText().trim());
-            adoptante.setEmail(emailField.getText().trim());
-            adoptante.setDireccion(direccionField.getText().trim());
-            adoptante.setObservaciones(observacionesField.getText().trim());
+            // Validar campos obligatorios
+            String nombre = nombreField.getText().trim();
+            String telefono = telefonoField.getText().trim();
+            String email = emailField.getText().trim();
+            String direccion = direccionField.getText().trim();
+            String observaciones = observacionesField.getText().trim();
             Animal animalSeleccionado = animalesComboBox.getValue();
-            adoptante.setIdAnimal(animalSeleccionado != null ? animalSeleccionado.getIdAnimal() : 0);
 
-            adoptanteDAO.save(adoptante); // Guardar los cambios en la base de datos
+            if (nombre.isEmpty() || telefono.isEmpty() || email.isEmpty() || direccion.isEmpty() || animalSeleccionado == null) {
+                throw new IllegalArgumentException("Todos los campos obligatorios deben estar llenos.");
+            }
+            if (!Utils.EmailValidator.isValid(email)) {
+                throw new IllegalArgumentException("El formato del correo electrónico no es válido.");
+            }
+
+            // Actualizar los datos del adoptante
+            adoptante.setNombre(nombre);
+            adoptante.setTelefono(telefono);
+            adoptante.setEmail(email);
+            adoptante.setDireccion(direccion);
+            adoptante.setObservaciones(observaciones);
+            adoptante.setIdAnimal(animalSeleccionado.getIdAnimal());
+
+            adoptanteDAO.save(adoptante);
 
             Utils.Alert("Éxito", "Adoptante actualizado", "El adoptante ha sido actualizado correctamente.", Alert.AlertType.INFORMATION, (Stage) tablaAdoptantes.getScene().getWindow());
 
             limpiarCampos();
-            guardarAdoptanteButton.setText("Guardar Adoptante");
-            guardarAdoptanteButton.setOnAction(event -> guardarAdoptante());
-            cargarAdoptantes(); // Actualizar la tabla
+            cargarAdoptantes();
         } catch (SQLException e) {
             Utils.Alert("Error", "Error al actualizar", "No se pudo actualizar el adoptante: " + e.getMessage(), Alert.AlertType.ERROR, (Stage) tablaAdoptantes.getScene().getWindow());
             e.printStackTrace();
+        } catch (IllegalArgumentException e) {
+            Utils.Alert("Error", "Error al actualizar", e.getMessage(), Alert.AlertType.ERROR, (Stage) tablaAdoptantes.getScene().getWindow());
         }
     }
-
     @FXML
     private void eliminarAdoptante() {
         Adoptante adoptanteSeleccionado = tablaAdoptantes.getSelectionModel().getSelectedItem();
@@ -176,7 +195,6 @@ public class ModuloAdoptantesController extends Controller implements Initializa
         }
     }
 
- @FXML
  private void guardarAdoptante() {
      try {
          // Validar campos obligatorios
@@ -205,13 +223,8 @@ public class ModuloAdoptantesController extends Controller implements Initializa
          limpiarCampos();
          cargarAdoptantes(); // Actualiza la tabla
      } catch (SQLException e) {
-         if (e.getMessage().contains("El correo electrónico ya está registrado")) {
-             Utils.Alert("Error", "Correo existente", e.getMessage(), Alert.AlertType.WARNING, (Stage) tablaAdoptantes.getScene().getWindow());
-         } else if (e.getMessage().contains("El nombre ya está registrado")) {
-             Utils.Alert("Error", "Nombre existente", e.getMessage(), Alert.AlertType.WARNING, (Stage) tablaAdoptantes.getScene().getWindow());
-         } else {
-             Utils.Alert("Error", "Error al guardar el adoptante", "Ocurrió un error al guardar en la base de datos.", Alert.AlertType.ERROR, (Stage) tablaAdoptantes.getScene().getWindow());
-         }
+         e.printStackTrace(); // Imprime el error en consola
+         Utils.Alert("Error", "Error al guardar el adoptante", "Ocurrió un error al guardar en la base de datos:\n" + e.getMessage(), Alert.AlertType.ERROR, (Stage) tablaAdoptantes.getScene().getWindow());
      } catch (IllegalArgumentException e) {
          Utils.Alert("Error", "Error al guardar el adoptante", e.getMessage(), Alert.AlertType.ERROR, (Stage) tablaAdoptantes.getScene().getWindow());
      }

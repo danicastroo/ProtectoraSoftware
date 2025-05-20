@@ -23,8 +23,6 @@ public class App extends Application {
     public void start(Stage stage) throws IOException {
         View view = AppController.loadFXML(Scenes.ROOT);
 
-        Utils.configurarLogger();
-
         scene = new Scene(view.scene, 900, 600);
         stage.centerOnScreen(); // Centra la ventana en la pantalla
         stage.setResizable(true); // Permite redimensionar la ventana

@@ -7,11 +7,9 @@ import github.danicastroo.model.interfaces.InterfaceAdoptaDAO;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 public class AdoptaDAO implements InterfaceAdoptaDAO {
 
-    private static final Logger logger = Logger.getLogger(AdoptaDAO.class.getName());
 
     @Override
     public Adopta save(Adopta adopta) throws SQLException {
@@ -24,8 +22,7 @@ public class AdoptaDAO implements InterfaceAdoptaDAO {
             stmt.setDate(3, Date.valueOf(adopta.getFechaAdopcion()));
             stmt.setString(4, adopta.getObservaciones());
 
-            int info = stmt.executeUpdate();
-            logger.info("AdoptaDAO.save: Filas insertadas = " + info);
+            stmt.executeUpdate();
 
             ResultSet rs = stmt.getGeneratedKeys();
             if (rs.next()) {
@@ -42,11 +39,7 @@ public class AdoptaDAO implements InterfaceAdoptaDAO {
              PreparedStatement stmt = conn.prepareStatement(query)) {
 
             stmt.setInt(1, adopta.getIdAdopta());
-            int info = stmt.executeUpdate();
-            logger.info("AdoptaDAO.delete: Filas eliminadas = " + info);
-        } catch (SQLException e) {
-            logger.severe("AdoptaDAO.delete: Error al eliminar adopta: " + e.getMessage());
-            throw e;
+            stmt.executeUpdate();
         }
         return adopta;
     }
@@ -63,18 +56,11 @@ public class AdoptaDAO implements InterfaceAdoptaDAO {
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
-                logger.info("AdoptaDAO.findById: Adopta encontrado con id = " + id);
                 return mapResultSetToAdopta(rs);
-            } else {
-                logger.info("AdoptaDAO.findById: No se encontró adopta con id = " + id);
             }
-        } catch (SQLException e) {
-            logger.severe("AdoptaDAO.findById: Error al buscar adopta: " + e.getMessage());
-            throw e;
         }
         return null;
     }
-
 
     @Override
     public List<Adopta> findAll() throws SQLException {
@@ -87,15 +73,9 @@ public class AdoptaDAO implements InterfaceAdoptaDAO {
             while (rs.next()) {
                 adopciones.add(mapResultSetToAdopta(rs));
             }
-            logger.info("AdoptaDAO.findAll: Total adopciones encontradas = " + adopciones.size());
-        } catch (SQLException e) {
-            logger.severe("AdoptaDAO.findAll: Error al obtener adopciones: " + e.getMessage());
-            throw e;
         }
         return adopciones;
     }
-
-
     private Adopta mapResultSetToAdopta(ResultSet rs) throws SQLException {
         Adopta adopta = new Adopta();
         adopta.setIdAdopta(rs.getInt("idAdopta"));
@@ -106,5 +86,23 @@ public class AdoptaDAO implements InterfaceAdoptaDAO {
         return adopta;
     }
 
+    public List<Adopta> findByAdoptanteId(int idAdoptante) throws SQLException {
+        List<Adopta> adopciones = new ArrayList<>();
+        String query = "SELECT * FROM adopta WHERE idAdoptante = ?";
+        try (Connection conn = ConnectionDB.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, idAdoptante);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                Adopta adopcion = new Adopta();
+                adopcion.setIdAdopta(rs.getInt("idAdopta"));
+                adopcion.setIdAdoptante(rs.getInt("idAdoptante"));
+                adopcion.setIdAnimal(rs.getInt("idAnimal"));
+                adopcion.setFechaAdopcion(rs.getDate("fechaAdopcion").toLocalDate());
+                adopcion.setObservaciones(rs.getString("observaciones"));
+                adopciones.add(adopcion);
+            }
+        }
+        return adopciones;
+    }
 }
-

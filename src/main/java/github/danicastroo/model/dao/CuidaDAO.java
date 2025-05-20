@@ -11,11 +11,10 @@ import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 public class CuidaDAO implements DAO<Cuida> {
 
-    private static final Logger logger = Logger.getLogger(CuidaDAO.class.getName());
+
 
     @Override
     public Cuida save(Cuida cuida) throws SQLException {
@@ -28,8 +27,7 @@ public class CuidaDAO implements DAO<Cuida> {
             stmt.setString(3, cuida.getObservaciones());
             stmt.setString(4, cuida.getTipo());
 
-            int info = stmt.executeUpdate();
-            logger.info("CuidaDAO.save: Filas insertadas = " + info);
+            stmt.executeUpdate();
 
             ResultSet rs = stmt.getGeneratedKeys();
             if (rs.next()) {
@@ -47,8 +45,7 @@ public class CuidaDAO implements DAO<Cuida> {
              PreparedStatement stmt = conn.prepareStatement(query)) {
 
             stmt.setInt(1, cuida.getIdCuida());
-            int info = stmt.executeUpdate();
-            logger.info("CuidaDAO.delete: Filas eliminadas = " + info);
+            stmt.executeUpdate();
         }
         return cuida;
     }
@@ -97,8 +94,7 @@ public class CuidaDAO implements DAO<Cuida> {
             stmt.setString(2, cuida.getTipo());
             stmt.setInt(3, cuida.getIdAnimal());
 
-            int info = stmt.executeUpdate();
-            logger.info("CuidaDAO.update: Filas actualizadas = " + info);
+            stmt.executeUpdate();
         }
     }
 
