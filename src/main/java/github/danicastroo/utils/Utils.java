@@ -14,10 +14,15 @@ public class Utils {
     public static void configurarLogger() {
         try {
             java.util.logging.Logger logger = java.util.logging.Logger.getLogger("");
+            java.util.logging.Handler[] handlers = logger.getHandlers();
+            for (java.util.logging.Handler handler : handlers) {
+                logger.removeHandler(handler);
+            }
             java.util.logging.FileHandler fh = new java.util.logging.FileHandler("registro.log", true);
             fh.setFormatter(new java.util.logging.SimpleFormatter());
+            fh.setLevel(java.util.logging.Level.WARNING);
             logger.addHandler(fh);
-            logger.setLevel(java.util.logging.Level.ALL);
+            logger.setLevel(java.util.logging.Level.WARNING);
         } catch (java.io.IOException e) {
             e.printStackTrace();
         }
