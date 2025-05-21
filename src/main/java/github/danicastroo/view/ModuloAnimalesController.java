@@ -40,6 +40,12 @@ public class ModuloAnimalesController extends Controller implements Initializabl
     @FXML
     private Button guardarAnimalButton;
 
+    /**
+     * Inicializa el controlador, carga los animales y configura los ComboBox y el botón de guardar.
+     *
+     * @param url            la ubicación utilizada para resolver rutas relativas para el objeto raíz, o null si no se conoce
+     * @param resourceBundle el recurso de internacionalización, o null si no se utiliza
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         cargarAnimales();
@@ -48,6 +54,10 @@ public class ModuloAnimalesController extends Controller implements Initializabl
         guardarAnimalButton.setOnAction(event -> guardarAnimal());
     }
 
+    /**
+     * Guarda un nuevo animal y su relación de cuidado en la base de datos.
+     * Valida los campos y muestra alertas en caso de error.
+     */
     private void guardarAnimal() {
         try {
             // Validar que los campos no estén vacíos
@@ -119,6 +129,12 @@ public class ModuloAnimalesController extends Controller implements Initializabl
         }
     }
 
+    /**
+     * Crea una fila visual (HBox) para mostrar un animal en la lista.
+     *
+     * @param animal el animal a mostrar
+     * @return un HBox con los controles y datos del animal
+     */
     private HBox crearFilaAnimal(Animal animal) {
         HBox fila = new HBox();
         fila.setSpacing(10); // Espaciado entre elementos
@@ -150,6 +166,10 @@ public class ModuloAnimalesController extends Controller implements Initializabl
         return fila;
     }
 
+    /**
+     * Carga y muestra los animales asociados al trabajador actual en el GridPane.
+     * Muestra alertas en caso de error.
+     */
     private void cargarAnimales() {
         listaAnimales.getChildren().clear(); // Limpiar el GridPane antes de llenarlo
         int idTrabajador = UserSession.getUser().getIdTrabajador(); // Obtener el ID del trabajador actual
@@ -178,6 +198,11 @@ public class ModuloAnimalesController extends Controller implements Initializabl
         }
     }
 
+    /**
+     * Muestra los detalles de un animal en un cuadro de diálogo.
+     *
+     * @param animal el animal del que se mostrarán los detalles
+     */
     private void verDetalles(Animal animal) {
         try {
             CuidaDAO cuidaDAO = new CuidaDAO();
@@ -215,37 +240,48 @@ public class ModuloAnimalesController extends Controller implements Initializabl
         }
     }
 
-private void editarAnimal(Animal animal) {
-    try {
-        // Cargar los datos del animal en los campos
-        nombreField.setText(animal.getNombre());
-        edadField.setText(String.valueOf(animal.getEdad()));
-        microchipField.setText(animal.getChip());
-        tipoComboBox.setValue(animal.getTipo());
-        estadoComboBox.setValue(animal.getEstado());
-        fechaAdopcionPicker.setValue(animal.getFechaAdopcion());
+    /**
+     * Carga los datos de un animal en los campos para su edición y prepara el botón para actualizar.
+     *
+     * @param animal el animal a editar
+     */
+    private void editarAnimal(Animal animal) {
+        try {
+            // Cargar los datos del animal en los campos
+            nombreField.setText(animal.getNombre());
+            edadField.setText(String.valueOf(animal.getEdad()));
+            microchipField.setText(animal.getChip());
+            tipoComboBox.setValue(animal.getTipo());
+            estadoComboBox.setValue(animal.getEstado());
+            fechaAdopcionPicker.setValue(animal.getFechaAdopcion());
 
-        // Obtener los datos de Cuida relacionados con el animal
-        CuidaDAO cuidaDAO = new CuidaDAO();
-        Cuida cuidado = cuidaDAO.findByAnimalId(animal.getIdAnimal());
-        if (cuidado != null) {
-            tipoCuidadoField.setText(cuidado.getTipo());
-            observacionesField.setText(cuidado.getObservaciones());
-        } else {
-            tipoCuidadoField.clear();
-            observacionesField.clear();
+            // Obtener los datos de Cuida relacionados con el animal
+            CuidaDAO cuidaDAO = new CuidaDAO();
+            Cuida cuidado = cuidaDAO.findByAnimalId(animal.getIdAnimal());
+            if (cuidado != null) {
+                tipoCuidadoField.setText(cuidado.getTipo());
+                observacionesField.setText(cuidado.getObservaciones());
+            } else {
+                tipoCuidadoField.clear();
+                observacionesField.clear();
+            }
+
+            // Cambiar la acción del botón "Guardar" para actualizar
+            guardarAnimalButton.setText("Actualizar");
+            guardarAnimalButton.setOnAction(event -> actualizarAnimal(animal));
+        } catch (Exception e) {
+            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Error al cargar los datos del animal para editar.");
+            alert.showAndWait();
         }
-
-        // Cambiar la acción del botón "Guardar" para actualizar
-        guardarAnimalButton.setText("Actualizar");
-        guardarAnimalButton.setOnAction(event -> actualizarAnimal(animal));
-    } catch (Exception e) {
-        e.printStackTrace();
-        Alert alert = new Alert(Alert.AlertType.ERROR, "Error al cargar los datos del animal para editar.");
-        alert.showAndWait();
     }
-}
 
+    /**
+     * Actualiza los datos de un animal y su relación de cuidado en la base de datos.
+     * Valida los campos y muestra alertas en caso de error.
+     *
+     * @param animal el animal a actualizar
+     */
     private void actualizarAnimal(Animal animal) {
         try {
             // Validar los campos como en el método guardarAnimal
@@ -307,6 +343,12 @@ private void editarAnimal(Animal animal) {
         }
     }
 
+    /**
+     * Elimina un animal de la base de datos y actualiza la lista visual.
+     * Muestra alertas en caso de error.
+     *
+     * @param animal el animal a eliminar
+     */
     private void eliminarAnimal(Animal animal) {
         try {
             AnimalDAO animalDAO = new AnimalDAO();
@@ -322,12 +364,22 @@ private void editarAnimal(Animal animal) {
         }
     }
 
-
+    /**
+     * Método llamado al abrir la vista. Implementación personalizada si es necesario.
+     *
+     * @param input objeto de entrada opcional
+     * @throws IOException si ocurre un error de entrada/salida
+     */
     @Override
     public void onOpen(Object input) throws IOException {
         // Implementación personalizada si es necesario
     }
 
+    /**
+     * Método llamado al cerrar la vista. Implementación personalizada si es necesario.
+     *
+     * @param output objeto de salida opcional
+     */
     @Override
     public void onClose(Object output) {
         // Implementación personalizada si es necesario

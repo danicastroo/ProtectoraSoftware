@@ -46,6 +46,13 @@ public class AppController extends Controller implements Initializable {
         this.centerController.onOpen(data);
     }
 
+    /**
+     * Cambia de escena pero tiene la funcionalidad de pantalla completa.
+     * @param sceneEnum the scene to change to
+     * @param data data to pass to the new scene (can be null)
+     * @param fullScreen true to enable full screen, false otherwise
+     * @throws IOException if an I/O error occurs while changing the scene
+     */
     public void changeSceneFullScreen(Scenes sceneEnum, Object data, boolean fullScreen) throws IOException {
         View view = loadFXML(sceneEnum);
         Scene newScene = new Scene(view.scene); // Creamos una nueva escena con el contenido cargado

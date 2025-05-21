@@ -39,60 +39,91 @@ public class InicioSesionController extends Controller implements Initializable 
         this.trabajadorDAO = new TrabajadorDAO();
     }
 
-
+    /**
+     * Se ejecuta al abrir esta vista.
+     * @param input Objeto de entrada, no se usa aquí.
+     * @throws IOException en caso de error al abrir recursos.
+     */
     @Override
     public void onOpen(Object input) throws IOException {
-
+        // No se necesita implementación por ahora
     }
 
+    /**
+     * Se ejecuta al cerrar esta vista.
+     * @param output Objeto de salida, no se usa aquí.
+     */
     @Override
     public void onClose(Object output) {
-
+        // No se necesita implementación por ahora
     }
 
+    /**
+     * Inicializa la vista después de cargar el FXML.
+     * @param url URL usado para la localización, no se usa aquí.
+     * @param resourceBundle Recursos usados para internacionalización, no se usa aquí.
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        // Detectar la tecla Enter en el campo de contraseña
+        // Detectar tecla Enter en el campo de contraseña para disparar el login
         ContrasenaField.setOnKeyPressed(event -> {
             switch (event.getCode()) {
                 case ENTER:
-                    btnIniciarSesion.fire(); //Funciona cuando le das enter
+                    btnIniciarSesion.fire();
                     break;
                 default:
                     break;
             }
         });
 
-        // Cargar el contenido del WebView
+        // Cargar contenido del WebView
         cargarRatoncito();
-
-
     }
 
+    /**
+     * Carga el archivo HTML del ratoncito en el WebView.
+     */
     @FXML
     private void cargarRatoncito(){
         String htmlPath = getClass().getResource("/github/danicastroo/images/ratoncito.html").toExternalForm();
         ratoncito.setStyle("-fx-background-color: transparent;");
-        ratoncito.setOpacity(1.0); // Asegura que sea visible
+        ratoncito.setOpacity(1.0);
         ratoncito.getEngine().load(htmlPath);
     }
 
-
+    /**
+     * Cambia a la escena principal en modo pantalla completa.
+     * @throws IOException si falla la carga de la escena.
+     */
     @FXML
     private void cambiarUsuario() throws IOException {
         App.currentController.changeSceneFullScreen(Scenes.MAIN, null, true);
     }
 
+    /**
+     * Cambia a la escena de bienvenida.
+     * @throws IOException si falla la carga de la escena.
+     */
     @FXML
     public void cambiarInicio() throws IOException {
         App.currentController.changeScene(Scenes.WELCOME, null);
     }
 
+    /**
+     * Cambia a la escena de registro.
+     * @throws IOException si falla la carga de la escena.
+     */
     @FXML
     public void cambiarRegistro() throws IOException {
         App.currentController.changeScene(Scenes.REGISTRO, null);
     }
 
+    /**
+     * Maneja el proceso de login del usuario.
+     * Valida los datos, encripta la contraseña y verifica credenciales con la base de datos.
+     * @throws SQLException si hay error en la consulta a la base de datos.
+     * @throws IOException si falla la carga de la siguiente escena.
+     */
     @FXML
     private void login() throws SQLException, IOException {
         boolean isValid = true;
@@ -121,7 +152,7 @@ public class InicioSesionController extends Controller implements Initializable 
                 Trabajador trabajador = trabajadorDAO.checkLogin(email, hashedPassword);
 
                 if (trabajador != null) {
-                    UserSession.login(trabajador); // Guarda el trabajador autenticado en la sesión
+                    UserSession.login(trabajador);
                     Utils.ShowAlert("Inicio de sesión exitoso. Bienvenido, " + trabajador.getNombre());
                     System.out.println("Inicio de sesión exitoso. Usuario: " + trabajador.getNombre());
                     cambiarUsuario();
@@ -135,6 +166,4 @@ public class InicioSesionController extends Controller implements Initializable 
             }
         }
     }
-
-
 }

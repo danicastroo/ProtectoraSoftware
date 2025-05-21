@@ -11,11 +11,6 @@ import java.util.List;
 
 public class TrabajadorDAO implements InterfaceTrabajadorDAO<Trabajador> {
 
-    private final static String INSERT = "INSERT INTO trabajador (nombre, estado, email, password) VALUES (?,?,?,?)";
-    private final static String UPDATE = "UPDATE trabajador SET nombre = ?, estado = ?, email = ?, password = ? WHERE idTrabajador = ?";
-    private final static String DELETE = "DELETE FROM trabajador WHERE idTrabajador=?";
-    private final static String FINDBYUSERNAME = "SELECT idTrabajador, nombre, estado, email, password FROM trabajador WHERE nombre=?";
-    private final static String QUERY = "SELECT nombre FROM trabajador WHERE email=? AND password=?";
     private Connection conn;
 
     /**
@@ -211,26 +206,4 @@ public class TrabajadorDAO implements InterfaceTrabajadorDAO<Trabajador> {
         // Método sin implementar
     }
 
-    /**
-     * Verifica si un nombre ya está registrado en la tabla persona.
-     *
-     * @param nombre el nombre a verificar.
-     * @return true si ya está registrado, false si no.
-     * @throws SQLException si ocurre un error en la consulta.
-     */
-    public boolean isNameRegistered(String nombre) throws SQLException {
-        String query = "SELECT COUNT(*) FROM persona WHERE nombre = ?";
-
-        try (Connection conn = ConnectionDB.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(query)) {
-
-            stmt.setString(1, nombre);
-            ResultSet rs = stmt.executeQuery();
-
-            if (rs.next()) {
-                return rs.getInt(1) > 0;
-            }
-        }
-        return false;
-    }
 }

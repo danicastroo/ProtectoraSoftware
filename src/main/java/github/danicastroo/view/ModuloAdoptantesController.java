@@ -268,11 +268,9 @@ public class ModuloAdoptantesController extends Controller implements Initializa
 
     @Override
     public void onOpen(Object input) throws IOException {
-        // Implementación personalizada si es necesario
     }
 
     @Override
     public void onClose(Object output) {
-        // Implementación personalizada si es necesario
     }
 }
