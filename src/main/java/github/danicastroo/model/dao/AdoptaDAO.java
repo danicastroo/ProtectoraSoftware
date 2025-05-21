@@ -10,7 +10,13 @@ import java.util.List;
 
 public class AdoptaDAO implements InterfaceAdoptaDAO {
 
-
+    /**
+     * Inserta una nueva adopción en la base de datos.
+     *
+     * @param adopta el objeto Adopta a guardar
+     * @return el objeto Adopta con el ID generado
+     * @throws SQLException si ocurre un error en la base de datos
+     */
     @Override
     public Adopta save(Adopta adopta) throws SQLException {
         String query = "INSERT INTO adopta (idAdoptante, idAnimal, fechaAdopcion, observaciones) VALUES (?, ?, ?, ?)";
@@ -32,6 +38,13 @@ public class AdoptaDAO implements InterfaceAdoptaDAO {
         return adopta;
     }
 
+    /**
+     * Elimina una adopción de la base de datos.
+     *
+     * @param adopta el objeto Adopta a eliminar
+     * @return el objeto Adopta eliminado
+     * @throws SQLException si ocurre un error en la base de datos
+     */
     @Override
     public Adopta delete(Adopta adopta) throws SQLException {
         String query = "DELETE FROM adopta WHERE idAdopta = ?";
@@ -44,8 +57,13 @@ public class AdoptaDAO implements InterfaceAdoptaDAO {
         return adopta;
     }
 
-
-
+    /**
+     * Busca una adopción por su ID.
+     *
+     * @param id el ID de la adopción
+     * @return el objeto Adopta encontrado o null si no existe
+     * @throws SQLException si ocurre un error en la base de datos
+     */
     @Override
     public Adopta findById(int id) throws SQLException {
         String query = "SELECT * FROM adopta WHERE idAdopta = ?";
@@ -62,6 +80,12 @@ public class AdoptaDAO implements InterfaceAdoptaDAO {
         return null;
     }
 
+    /**
+     * Recupera todas las adopciones de la base de datos.
+     *
+     * @return lista de objetos Adopta
+     * @throws SQLException si ocurre un error en la base de datos
+     */
     @Override
     public List<Adopta> findAll() throws SQLException {
         List<Adopta> adopciones = new ArrayList<>();
@@ -76,6 +100,14 @@ public class AdoptaDAO implements InterfaceAdoptaDAO {
         }
         return adopciones;
     }
+
+    /**
+     * Convierte un ResultSet en un objeto Adopta.
+     *
+     * @param rs el ResultSet de la consulta
+     * @return el objeto Adopta mapeado
+     * @throws SQLException si ocurre un error al leer el ResultSet
+     */
     private Adopta mapResultSetToAdopta(ResultSet rs) throws SQLException {
         Adopta adopta = new Adopta();
         adopta.setIdAdopta(rs.getInt("idAdopta"));
@@ -86,6 +118,13 @@ public class AdoptaDAO implements InterfaceAdoptaDAO {
         return adopta;
     }
 
+    /**
+     * Busca todas las adopciones realizadas por un adoptante específico.
+     *
+     * @param idAdoptante el ID del adoptante
+     * @return lista de adopciones realizadas por ese adoptante
+     * @throws SQLException si ocurre un error en la base de datos
+     */
     public List<Adopta> findByAdoptanteId(int idAdoptante) throws SQLException {
         List<Adopta> adopciones = new ArrayList<>();
         String query = "SELECT * FROM adopta WHERE idAdoptante = ?";

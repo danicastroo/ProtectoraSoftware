@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.sql.*;
 import java.util.List;
 
+
 public class TrabajadorDAO implements InterfaceTrabajadorDAO<Trabajador> {
 
     private final static String INSERT = "INSERT INTO trabajador (nombre, estado, email, password) VALUES (?,?,?,?)";
@@ -18,19 +19,24 @@ public class TrabajadorDAO implements InterfaceTrabajadorDAO<Trabajador> {
     private Connection conn;
 
     /**
-     * Constructor that initializes the connection to the database.
+     * Constructor que inicializa la conexión a la base de datos.
      */
     public TrabajadorDAO() {
         try {
-            // Initializing the connection once an instance of TrabajadorDAO is created
             this.conn = ConnectionDB.getConnection();
         } catch (SQLException e) {
-            // Gestionar el error si la conexión no se puede inicializar
             System.err.println("Error al inicializar la conexión en TrabajadorDAO:");
             e.printStackTrace();
         }
     }
 
+    /**
+     * Verifica si un email ya está registrado en la tabla persona.
+     *
+     * @param email el email a verificar.
+     * @return true si ya está registrado, false si no.
+     * @throws SQLException si ocurre un error en la consulta.
+     */
     public boolean isEmailRegistered(String email) throws SQLException {
         String query = "SELECT COUNT(*) FROM persona WHERE email = ?";
 
@@ -41,14 +47,19 @@ public class TrabajadorDAO implements InterfaceTrabajadorDAO<Trabajador> {
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
-                return rs.getInt(1) > 0; // Si el conteo es mayor a 0, el correo ya existe
+                return rs.getInt(1) > 0;
             }
         }
         return false;
     }
 
-
-
+    /**
+     * Busca un trabajador en la base de datos por su nombre de usuario (email).
+     *
+     * @param username el nombre de usuario (email).
+     * @return el objeto Trabajador si se encuentra, null en caso contrario.
+     * @throws SQLException si ocurre un error al ejecutar la consulta.
+     */
     public Trabajador findByUsername(String username) throws SQLException {
         final String FIND_BY_USERNAME = "SELECT * FROM trabajador WHERE email = ?";
 
@@ -59,7 +70,7 @@ public class TrabajadorDAO implements InterfaceTrabajadorDAO<Trabajador> {
                 if (rs.next()) {
                     Trabajador trabajador = new Trabajador();
                     trabajador.setIdTrabajador(rs.getInt("idTrabajador"));
-                    trabajador.setNombre(rs.getString("nombre"));  // Cambia el tipo al corregir la tabla
+                    trabajador.setNombre(rs.getString("nombre"));
                     trabajador.setEstado(rs.getString("estado"));
                     trabajador.setEmail(rs.getString("email"));
                     trabajador.setPassword(rs.getString("password"));
@@ -74,8 +85,14 @@ public class TrabajadorDAO implements InterfaceTrabajadorDAO<Trabajador> {
         return null;
     }
 
-
-
+    /**
+     * Comprueba si un trabajador puede iniciar sesión con el email y contraseña proporcionados.
+     *
+     * @param email    el email del trabajador.
+     * @param password la contraseña del trabajador.
+     * @return el objeto Trabajador si las credenciales son válidas, null si no lo son.
+     * @throws SQLException si ocurre un error en la consulta.
+     */
     @Override
     public Trabajador checkLogin(String email, String password) throws SQLException {
         String query = "SELECT t.idTrabajador, t.estado, t.email, p.nombre " +
@@ -104,8 +121,13 @@ public class TrabajadorDAO implements InterfaceTrabajadorDAO<Trabajador> {
         return trabajador;
     }
 
-
-
+    /**
+     * Guarda un nuevo trabajador en la base de datos, insertando primero en persona y luego en trabajador.
+     *
+     * @param trabajador el objeto Trabajador a guardar.
+     * @return el mismo objeto Trabajador guardado.
+     * @throws SQLException si ocurre un error al insertar.
+     */
     @Override
     public Trabajador save(Trabajador trabajador) throws SQLException {
         String insertPersonaSQL = "INSERT INTO persona (nombre, email) VALUES (?, ?)";
@@ -146,40 +168,69 @@ public class TrabajadorDAO implements InterfaceTrabajadorDAO<Trabajador> {
         return trabajador;
     }
 
+    /**
+     * Método sin implementar para eliminar un trabajador.
+     *
+     * @param entity el objeto Trabajador a eliminar.
+     * @return null actualmente.
+     * @throws SQLException si ocurre un error (no implementado).
+     */
     @Override
     public Trabajador delete(Trabajador entity) throws SQLException {
         return null;
     }
 
+    /**
+     * Método sin implementar para buscar un trabajador por ID.
+     *
+     * @param key el ID del trabajador.
+     * @return null actualmente.
+     */
     @Override
     public Trabajador findById(int key) {
         return null;
     }
 
+    /**
+     * Método sin implementar que debería retornar todos los trabajadores.
+     *
+     * @return lista vacía actualmente.
+     */
     @Override
     public List<Trabajador> findAll() {
         return List.of();
     }
 
+    /**
+     * Cierra los recursos de DAO. Actualmente sin implementación.
+     *
+     * @throws IOException si ocurre un error al cerrar.
+     */
     @Override
     public void close() throws IOException {
-
+        // Método sin implementar
     }
 
-
+    /**
+     * Verifica si un nombre ya está registrado en la tabla persona.
+     *
+     * @param nombre el nombre a verificar.
+     * @return true si ya está registrado, false si no.
+     * @throws SQLException si ocurre un error en la consulta.
+     */
     public boolean isNameRegistered(String nombre) throws SQLException {
         String query = "SELECT COUNT(*) FROM persona WHERE nombre = ?";
 
         try (Connection conn = ConnectionDB.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
 
-            stmt.setString(1, nombre); // Reemplaza el parámetro de la consulta con el nombre
+            stmt.setString(1, nombre);
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
-                return rs.getInt(1) > 0; // Si COUNT(*) > 0, el nombre ya existe
+                return rs.getInt(1) > 0;
             }
         }
-        return false; // Si no hay filas con ese nombre, el nombre no está registrado
+        return false;
     }
 }

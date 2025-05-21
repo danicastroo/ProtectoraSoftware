@@ -3,6 +3,13 @@ package github.danicastroo.model.connection;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+
+/**
+ * Clase para gestionar la conexión a la base de datos.
+ * Implementa el patrón Singleton para asegurar una única instancia de conexión.
+ * Lee las propiedades de conexión desde un archivo XML.
+ * 
+ */
 public class ConnectionDB {
     private final static String FILE = "connection.xml";
     private static Connection con;
@@ -12,7 +19,10 @@ public class ConnectionDB {
     private String user;
     private String password;
 
-
+    /**
+     * Constructor privado.
+     * Lee las propiedades de conexión desde un archivo XML y establece la conexión.
+     */
     private ConnectionDB() {
         ConnectionProperties properties = null;
 
@@ -49,6 +59,11 @@ public class ConnectionDB {
         }
     }
 
+    /**
+     * Obtiene la instancia única de ConnectionDB.
+     *
+     * @return la instancia singleton de ConnectionDB
+     */
     public static ConnectionDB getInstance() {
         if (_instance == null) {
             _instance = new ConnectionDB();
@@ -56,7 +71,12 @@ public class ConnectionDB {
         return _instance;
     }
 
-
+    /**
+     * Obtiene una nueva conexión a la base de datos.
+     *
+     * @return una nueva conexión a la base de datos
+     * @throws SQLException si ocurre un error al conectar
+     */
     public static Connection getConnection() throws SQLException {
         // Obtener una nueva conexión a la base de datos cada vez que se llama
         try {
@@ -69,7 +89,9 @@ public class ConnectionDB {
         }
     }
 
-
+    /**
+     * Cierra la conexión actual a la base de datos si está abierta.
+     */
     public static void closeConnection() {
         if (con != null) {
             try {
@@ -80,4 +102,3 @@ public class ConnectionDB {
         }
     }
 }
-

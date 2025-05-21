@@ -34,6 +34,13 @@ public class AdoptanteDAO implements InterfaceAdoptanteDAO<Adoptante> {
         }
     }
 
+    /**
+     * Guarda un adoptante en la base de datos. Si el adoptante ya existe, lo actualiza.
+     *
+     * @param adoptante el objeto Adoptante a guardar o actualizar
+     * @return el objeto Adoptante guardado o actualizado
+     * @throws SQLException si ocurre un error en la base de datos
+     */
     @Override
     public Adoptante save(Adoptante adoptante) throws SQLException {
         if (adoptante.getIdAdoptante() > 0) {
@@ -116,6 +123,13 @@ public class AdoptanteDAO implements InterfaceAdoptanteDAO<Adoptante> {
         return adoptante;
     }
 
+    /**
+     * Elimina un adoptante de la base de datos.
+     *
+     * @param adoptante el objeto Adoptante a eliminar
+     * @return el objeto Adoptante eliminado
+     * @throws SQLException si ocurre un error en la base de datos
+     */
     @Override
     public Adoptante delete(Adoptante adoptante) throws SQLException {
         try (PreparedStatement stmt = conn.prepareStatement(DELETE)) {
@@ -125,6 +139,13 @@ public class AdoptanteDAO implements InterfaceAdoptanteDAO<Adoptante> {
         return adoptante;
     }
 
+    /**
+     * Busca un adoptante por su ID.
+     *
+     * @param id el ID del adoptante
+     * @return el objeto Adoptante encontrado o null si no existe
+     * @throws SQLException si ocurre un error en la base de datos
+     */
     @Override
     public Adoptante findById(int id) throws SQLException {
         try (PreparedStatement stmt = conn.prepareStatement(FINDBYID)) {
@@ -137,6 +158,30 @@ public class AdoptanteDAO implements InterfaceAdoptanteDAO<Adoptante> {
         return null;
     }
 
+    public List<Adoptante> findAllByTrabajador(int idTrabajador) throws SQLException {
+        List<Adoptante> adoptantes = new ArrayList<>();
+        String query = "SELECT a.*, p.email FROM adoptante a " +
+                "LEFT JOIN persona p ON a.idPersona = p.idPersona " +
+                "INNER JOIN adopta ad ON a.idAdoptante = ad.idAdoptante " +
+                "INNER JOIN cuida c ON ad.idAnimal = c.idAnimal " +
+                "WHERE c.idTrabajador = ?";
+        try (PreparedStatement stmt = ConnectionDB.getConnection().prepareStatement(query)) {
+            stmt.setInt(1, idTrabajador);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                adoptantes.add(mapResultSetToAdoptante(rs));
+            }
+        }
+        return adoptantes;
+    }
+
+    /**
+     * Busca un adoptante por el ID del animal adoptado.
+     *
+     * @param idAnimal el ID del animal
+     * @return el objeto Adoptante encontrado o null si no existe
+     * @throws SQLException si ocurre un error en la base de datos
+     */
     public Adoptante findByAnimalId(int idAnimal) throws SQLException {
         try (PreparedStatement stmt = conn.prepareStatement(FINDBYANIMALID)) {
             stmt.setInt(1, idAnimal);
@@ -148,6 +193,12 @@ public class AdoptanteDAO implements InterfaceAdoptanteDAO<Adoptante> {
         return null;
     }
 
+    /**
+     * Recupera todos los adoptantes de la base de datos.
+     *
+     * @return lista de objetos Adoptante
+     * @throws SQLException si ocurre un error en la base de datos
+     */
     @Override
     public List<Adoptante> findAll() throws SQLException {
         List<Adoptante> adoptantes = new ArrayList<>();
@@ -160,6 +211,13 @@ public class AdoptanteDAO implements InterfaceAdoptanteDAO<Adoptante> {
         return adoptantes;
     }
 
+    /**
+     * Convierte un ResultSet en un objeto Adoptante.
+     *
+     * @param rs el ResultSet de la consulta
+     * @return el objeto Adoptante mapeado
+     * @throws SQLException si ocurre un error al leer el ResultSet
+     */
     private Adoptante mapResultSetToAdoptante(ResultSet rs) throws SQLException {
         Adoptante adoptante = new Adoptante();
         adoptante.setIdAdoptante(rs.getInt("idAdoptante"));
@@ -173,6 +231,11 @@ public class AdoptanteDAO implements InterfaceAdoptanteDAO<Adoptante> {
         return adoptante;
     }
 
+    /**
+     * Cierra la conexión a la base de datos.
+     *
+     * @throws IOException si ocurre un error al cerrar la conexión
+     */
     @Override
     public void close() throws IOException {
         if (conn != null) {
@@ -184,6 +247,13 @@ public class AdoptanteDAO implements InterfaceAdoptanteDAO<Adoptante> {
         }
     }
 
+    /**
+     * Busca un adoptante por su email.
+     *
+     * @param email el email del adoptante
+     * @return el objeto Adoptante encontrado o null si no existe
+     * @throws SQLException si ocurre un error en la base de datos
+     */
     @Override
     public Adoptante findByEmail(String email) throws SQLException {
         return null;

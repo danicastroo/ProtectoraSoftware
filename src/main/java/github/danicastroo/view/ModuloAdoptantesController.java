@@ -195,40 +195,49 @@ public class ModuloAdoptantesController extends Controller implements Initializa
         }
     }
 
- private void guardarAdoptante() {
-     try {
-         // Validar campos obligatorios
-         String nombre = nombreField.getText().trim();
-         String telefono = telefonoField.getText().trim();
-         String email = emailField.getText().trim();
-         String direccion = direccionField.getText().trim();
-         String observaciones = observacionesField.getText().trim();
-         Animal animalSeleccionado = animalesComboBox.getValue();
+    private void guardarAdoptante() {
+        try {
+            // Validar campos obligatorios
+            String nombre = nombreField.getText().trim();
+            String telefono = telefonoField.getText().trim();
+            String email = emailField.getText().trim();
+            String direccion = direccionField.getText().trim();
+            String observaciones = observacionesField.getText().trim();
+            Animal animalSeleccionado = animalesComboBox.getValue();
 
-         if (nombre.isEmpty() || telefono.isEmpty() || email.isEmpty() || direccion.isEmpty() || animalSeleccionado == null) {
-             throw new IllegalArgumentException("Todos los campos obligatorios deben estar llenos.");
-         }
+            if (nombre.isEmpty() || telefono.isEmpty() || email.isEmpty() || direccion.isEmpty() || animalSeleccionado == null) {
+                throw new IllegalArgumentException("Todos los campos obligatorios deben estar llenos.");
+            }
 
-         // Validar formato del email
-         if (!Utils.EmailValidator.isValid(email)) {
-             throw new IllegalArgumentException("El formato del correo electrónico no es válido.");
-         }
+            // Validar formato del email
+            if (!Utils.EmailValidator.isValid(email)) {
+                throw new IllegalArgumentException("El formato del correo electrónico no es válido.");
+            }
 
-         // Crear y guardar el adoptante
-         Adoptante adoptante = new Adoptante(0, nombre, telefono, email, direccion, animalSeleccionado.getIdAnimal(), observaciones);
-         adoptanteDAO.save(adoptante);
+            // Crear y guardar el adoptante
+            Adoptante adoptante = new Adoptante(0, nombre, telefono, email, direccion, animalSeleccionado.getIdAnimal(), observaciones);
+            adoptanteDAO.save(adoptante);
 
-         Utils.Alert("Éxito", "Adoptante guardado", "El adoptante ha sido registrado correctamente.", Alert.AlertType.INFORMATION, (Stage) tablaAdoptantes.getScene().getWindow());
+            // Crear la relación en adopta
+            AdoptaDAO adoptaDAO = new AdoptaDAO();
+            Adopta adopta = new Adopta();
+            adopta.setIdAdoptante(adoptante.getIdAdoptante());
+            adopta.setIdAnimal(animalSeleccionado.getIdAnimal());
+            adopta.setFechaAdopcion(java.time.LocalDate.now());
+            adopta.setObservaciones(observaciones);
+            adoptaDAO.save(adopta);
 
-         limpiarCampos();
-         cargarAdoptantes(); // Actualiza la tabla
-     } catch (SQLException e) {
-         e.printStackTrace(); // Imprime el error en consola
-         Utils.Alert("Error", "Error al guardar el adoptante", "Ocurrió un error al guardar en la base de datos:\n" + e.getMessage(), Alert.AlertType.ERROR, (Stage) tablaAdoptantes.getScene().getWindow());
-     } catch (IllegalArgumentException e) {
-         Utils.Alert("Error", "Error al guardar el adoptante", e.getMessage(), Alert.AlertType.ERROR, (Stage) tablaAdoptantes.getScene().getWindow());
-     }
- }
+            Utils.Alert("Éxito", "Adoptante guardado", "El adoptante ha sido registrado correctamente.", Alert.AlertType.INFORMATION, (Stage) tablaAdoptantes.getScene().getWindow());
+
+            limpiarCampos();
+            cargarAdoptantes(); // Actualiza la tabla
+        } catch (SQLException e) {
+            e.printStackTrace(); // Imprime el error en consola
+            Utils.Alert("Error", "Error al guardar el adoptante", "Ocurrió un error al guardar en la base de datos:\n" + e.getMessage(), Alert.AlertType.ERROR, (Stage) tablaAdoptantes.getScene().getWindow());
+        } catch (IllegalArgumentException e) {
+            Utils.Alert("Error", "Error al guardar el adoptante", e.getMessage(), Alert.AlertType.ERROR, (Stage) tablaAdoptantes.getScene().getWindow());
+        }
+    }
 
     private String obtenerNombreAnimal(int idAnimal) {
         Animal animal = animalDAO.findById(idAnimal);
@@ -237,12 +246,8 @@ public class ModuloAdoptantesController extends Controller implements Initializa
 
     private void cargarAdoptantes() {
         try {
-            List<Adoptante> adoptantes = adoptanteDAO.findAll();
-            System.out.println("Adoptantes recuperados: " + adoptantes.size());
-            for (Adoptante adoptante : adoptantes) {
-                System.out.println("Adoptante: " + adoptante.getNombre());
-            }
-
+            int idTrabajador = UserSession.getUser().getIdTrabajador();
+            List<Adoptante> adoptantes = adoptanteDAO.findAllByTrabajador(idTrabajador);
             tablaAdoptantes.getItems().clear();
             tablaAdoptantes.getItems().addAll(adoptantes);
         } catch (SQLException e) {

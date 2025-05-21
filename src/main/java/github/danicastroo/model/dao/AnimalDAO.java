@@ -13,6 +13,13 @@ package github.danicastroo.model.dao;
 
              public class AnimalDAO implements DAO<Animal> {
 
+                 /**
+                  * Inserta un nuevo animal en la base de datos.
+                  *
+                  * @param animal el objeto Animal a guardar
+                  * @return el objeto Animal con el ID generado
+                  * @throws SQLException si ocurre un error en la base de datos
+                  */
                  @Override
                  public Animal save(Animal animal) throws SQLException {
                      String query = "INSERT INTO animal (nombre, chip, edad, tipo, estado, fechaAdopcion) VALUES (?, ?, ?, ?, ?, ?)";
@@ -41,6 +48,13 @@ package github.danicastroo.model.dao;
                      return animal;
                  }
 
+                 /**
+                  * Actualiza los datos de un animal en la base de datos.
+                  *
+                  * @param animal el objeto Animal a actualizar
+                  * @return el objeto Animal actualizado
+                  * @throws SQLException si ocurre un error en la base de datos
+                  */
                  public Animal update(Animal animal) throws SQLException {
                      String query = "UPDATE animal SET nombre = ?, chip = ?, edad = ?, tipo = ?, estado = ?, fechaAdopcion = ? WHERE idAnimal = ?";
                      try (Connection conn = ConnectionDB.getConnection();
@@ -65,6 +79,13 @@ package github.danicastroo.model.dao;
                      return animal;
                  }
 
+                 /**
+                  * Elimina un animal de la base de datos.
+                  *
+                  * @param animal el objeto Animal a eliminar
+                  * @return el objeto Animal eliminado
+                  * @throws SQLException si ocurre un error en la base de datos
+                  */
                  @Override
                  public Animal delete(Animal animal) throws SQLException {
                      String query = "DELETE FROM animal WHERE idAnimal = ?";
@@ -77,6 +98,12 @@ package github.danicastroo.model.dao;
                      return animal;
                  }
 
+                 /**
+                  * Busca un animal por su ID.
+                  *
+                  * @param id el ID del animal
+                  * @return el objeto Animal encontrado o null si no existe
+                  */
                  @Override
                  public Animal findById(int id) {
                      String query = "SELECT * FROM animal WHERE idAnimal = ?";
@@ -95,6 +122,11 @@ package github.danicastroo.model.dao;
                      return null;
                  }
 
+                 /**
+                  * Recupera todos los animales de la base de datos.
+                  *
+                  * @return lista de objetos Animal
+                  */
                  @Override
                  public List<Animal> findAll() {
                      List<Animal> animals = new ArrayList<>();
@@ -112,6 +144,13 @@ package github.danicastroo.model.dao;
                      return animals;
                  }
 
+                 /**
+                  * Convierte un ResultSet en un objeto Animal.
+                  *
+                  * @param rs el ResultSet de la consulta
+                  * @return el objeto Animal mapeado
+                  * @throws SQLException si ocurre un error al leer el ResultSet
+                  */
                  private Animal mapResultSetToAnimal(ResultSet rs) throws SQLException {
                      Animal animal = new Animal();
                      animal.setIdAnimal(rs.getInt("idAnimal"));
@@ -124,8 +163,12 @@ package github.danicastroo.model.dao;
                      return animal;
                  }
 
+                 /**
+                  * Cierra recursos si es necesario.
+                  *
+                  * @throws IOException si ocurre un error al cerrar recursos
+                  */
                  @Override
                  public void close() throws IOException {
-                     // No resources to close
                  }
              }
